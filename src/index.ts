@@ -1,5 +1,11 @@
-import MyCounter from './components/MyCounter';
+import EpicsChart from "./components/EpicsChart"
+import SiriusInvisible from "./components/SiriusInvisible"
+import SiriusLabel from "./components/SiriusLabel"
+import SiriusLed from "./components/SiriusLed"
 
 export {
-    MyCounter
+    EpicsChart,
+    SiriusInvisible,
+    SiriusLed,
+    SiriusLabel
 }
