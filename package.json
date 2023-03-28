@@ -2,17 +2,30 @@
   "name": "sirius-epics-react",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc"
+    "build": "yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lnls-sirius/epics-react.git"
+    "url": "https://github.com/lnls-sirius/epics-react.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "react",
+    "typescript",
+    "epics",
+    "sirius"
+  ],
+  "author": "LNLS - Sirius",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/lnls-sirius/epics-react/issues"
   },
