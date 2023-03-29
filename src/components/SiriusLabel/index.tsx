@@ -1,7 +1,7 @@
 import React from "react";
 import SiriusTooltip from "../SiriusTooltip";
-import Epics from "../data-access/EPICS/Epics";
-import { DictEpicsData, EpicsData, LabelPv, StateStr } from "../assets/interfaces";
+import Epics from "../../data-access/EPICS/Epics";
+import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
 
 /**
  * Show a default Label display for EPICS
@@ -12,7 +12,7 @@ import { DictEpicsData, EpicsData, LabelPv, StateStr } from "../assets/interface
  * @param timer - Timer object
  * @param pv_name - Name of the PV connected
  */
-class SiriusLabel extends React.Component<LabelPv, StateStr>{
+class SiriusLabel extends React.Component<LabelPv, State<string>>{
   private refreshInterval: number = 100;
   private epics: Epics;
   private timer: null|NodeJS.Timer;
@@ -24,7 +24,7 @@ class SiriusLabel extends React.Component<LabelPv, StateStr>{
     this.updateLabel = this.updateLabel.bind(this);
 
     this.state = {
-      value: props.state
+      value: props.value
     };
 
     if(props.updateInterval!=undefined){
@@ -70,9 +70,9 @@ class SiriusLabel extends React.Component<LabelPv, StateStr>{
    * Update label with measured EPICS value
    */
   updateLabel(): void {
-    const pvData: DictEpicsData = this.epics.pvData;
+    const pvData: Dict<EpicsData> = this.epics.pvData;
     const pvInfo: EpicsData = pvData[this.pv_name];
-    let label_value: string = this.props.state;
+    let label_value: string = this.props.value;
     if(pvInfo != undefined){
       if(this.state!=null &&
           pvInfo.value != null){

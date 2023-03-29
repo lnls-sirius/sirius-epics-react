@@ -1,7 +1,7 @@
-import { DictStr } from "./interfaces"
+import { Dict } from "./interfaces"
 
 // Component colors
-const colors: {[key: string]: DictStr} = {
+const colors: Dict<Dict<string>> = {
     led: {
         '0': 'radial-gradient(#1bff1d, #14a200)',
         '1': 'radial-gradient(#f8ff1b, #a29800)',
@@ -11,7 +11,7 @@ const colors: {[key: string]: DictStr} = {
 }
 
 // Main led shapes
-const led_shape: DictStr = {
+const led_shape: Dict<string> = {
     circle: `
         border-radius: 2em;`,
     squ_circ: `

@@ -1,11 +1,11 @@
 import { Component, createRef } from "react";
 import {Chart} from 'chart.js';
 import 'chartjs-adapter-moment';
-import Epics from "../data-access/EPICS/Epics";
+import Epics from "../../data-access/EPICS/Epics";
 import { colors } from "../../../assets/themes";
 import { led_limits } from "../../../assets/constants";
-import { ScaleType, DictEpicsData, EpicsChartInterface,
-  EpicsData, RefChart } from "../assets/interfaces";
+import { Dict, EpicsChartInterface,
+  EpicsData, RefChart } from "../../assets/interfaces";
 import * as S from './styled';
 
 /**
@@ -133,21 +133,16 @@ class EpicsChart extends Component<EpicsChartInterface>{
    * @param pv_name - Name of the PV being analyzed.
    * @returns color of the bar representing the analysed PV.
    */
-  verifyAlertAlarm(value: number, pv_name: string): string {
+  // Change for function of EpicsBase
+  verifyAlertAlarm(value: number): string {
     if(this.props.alarm!=undefined){
       if(value >= this.props.alarm){
-        if(this.props.popup){
-          this.props.popup.add_alarm(pv_name);
-        }
         return colors.limits.alarm;
       }
     }
 
     if(this.props.alert != undefined){
       if(value >= this.props.alert){
-        if(this.props.popup){
-          this.props.popup.add_alert(pv_name);
-        }
         return colors.limits.alert;
       }
     }
@@ -165,7 +160,7 @@ class EpicsChart extends Component<EpicsChartInterface>{
     let datasetList: number[] = [];
     let labelList: string[] = [];
     let colorList: string[] = [];
-    const pvData: DictEpicsData = this.epics.pvData;
+    const pvData: Dict<EpicsData> = this.epics.pvData;
 
     Object.entries(pvData).map(async ([pv_name, data]: [string, EpicsData], idx_data: number)=>{
       const pvname: string = this.simplifyLabel(pv_name);
@@ -191,7 +186,7 @@ class EpicsChart extends Component<EpicsChartInterface>{
    * @returns new Chart object
    */
   createChart(reference: HTMLCanvasElement): Chart {
-    const scalesOpt: ScaleType = {
+    const scalesOpt: Dict<any> = {
       x: {
         display: true,
         type: 'category',

@@ -1,3 +1,17 @@
+type RefChart = React.RefObject<HTMLCanvasElement>
+
+interface State<T> {
+    value: T
+}
+
+interface Dict<T> {
+    [key: string]: T
+}
+
+interface PvTooltipInterface{
+    text: string,
+    children: React.ReactNode
+}
 
 interface PvListInterface {
     pv_list: Array<string>
@@ -16,6 +30,7 @@ interface PvInterface {
     pv_name: string | string[],
     egu?: string,
     updateInterval?: number,
+    threshold?: Dict<number>,
     modifyValue?: (value: any, pvname?: string) => any;
 }
 
@@ -26,67 +41,30 @@ interface EpicsData {
     count: null|number
 }
 
-interface DictEpicsData {
-    [key: string]: EpicsData
-}
-
-interface PvTooltipInterface{
-    text: string,
-    children: React.ReactNode
-}
-
 interface LabelPv
-    extends PvInterface {
-        state: string
+    extends PvInterface, State<string> {
 }
 
-interface LedStatus{
-    state: number,
-    shape: string
+interface LedStatus
+    extends State<number> {
+        shape: string
 }
 
 interface LedPv
     extends PvInterface {
-        shape: string,
-        alert?: number,
-        alarm?: number
-}
-
-interface StateBool {
-    value: boolean
-}
-
-interface StateNum {
-    value: number
-}
-
-interface StateStr {
-    value: string
-}
-
-interface DictStr {
-    [key: string]: string
-}
-
-type RefChart = React.RefObject<HTMLCanvasElement>
-type ScaleType = {
-    [ḱey: string]: any
+        shape: string
 }
 
 export type {
     PvListInterface,
     EpicsChartInterface,
     PvInterface,
-    DictEpicsData,
     EpicsData,
     PvTooltipInterface,
     LabelPv,
     LedStatus,
     LedPv,
-    StateBool,
-    StateNum,
-    StateStr,
-    DictStr,
-    RefChart,
-    ScaleType
+    State,
+    Dict,
+    RefChart
 }

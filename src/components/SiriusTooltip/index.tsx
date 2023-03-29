@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { usePopper } from "react-popper";
-import { PvTooltipInterface } from "../assets/interfaces";
+import { PvTooltipInterface } from "../../assets/interfaces";
 import * as S from './styled';
 
 /**

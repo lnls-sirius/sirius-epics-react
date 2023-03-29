@@ -1,6 +1,6 @@
 import React from "react";
-import Epics from "../data-access/EPICS/Epics";
-import { PvInterface, DictEpicsData, EpicsData } from "../assets/interfaces";
+import Epics from "../../data-access/EPICS/Epics";
+import { PvInterface, Dict, EpicsData } from "../../assets/interfaces";
 
 /**
  * Monitor without display some EPICS PVs
@@ -51,7 +51,7 @@ class SiriusInvisible extends React.Component<PvInterface>{
    * Update value with measured EPICS value
    */
   updateLabel(): void {
-    const pvData: DictEpicsData = this.epics.pvData;
+    const pvData: Dict<EpicsData> = this.epics.pvData;
     this.pv_name.map((pvname: string) => {
       const pvInfo: EpicsData = pvData[pvname];
       if(pvInfo != undefined &&
