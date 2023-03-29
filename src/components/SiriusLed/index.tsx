@@ -55,16 +55,8 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     const { pv_name, threshold, update_interval } = props;
 
     this.epics = new EpicsBase(pv_name);
-    this.epics.set_pvname(pv_name);
-    this.epics.create_epics();
+    this.epics.initialize(pv_name, threshold, update_interval);
     this.epics.start_timer(this.updateLed);
-
-    if(threshold !== undefined) {
-      this.epics.set_thresholds(threshold);
-    }
-    if(update_interval !=undefined){
-      this.epics.set_update_interval(update_interval);
-    }
     return this.epics;
   }
 

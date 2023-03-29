@@ -63,6 +63,18 @@ class EpicsBase<T> {
         this.thresholds = new Thresholds();
     }
 
+    initialize(pv_name: T, threshold: undefined|Dict<number>, update_interval: undefined|number): void {
+        this.set_pvname(pv_name);
+        this.create_epics();
+
+        if(threshold !== undefined) {
+            this.set_thresholds(threshold);
+        }
+        if(update_interval !=undefined){
+            this.set_update_interval(update_interval);
+        }
+    }
+
     start_timer(fun: ()=>void): void {
         this.timer = setInterval(
             fun, this.update_interval);
