@@ -45,14 +45,14 @@ interface LabelPv
     extends PvInterface<string>, State<string> {
 }
 
-interface LedStatus
-    extends State<number> {
-        shape: string
+interface LedStatus<T> {
+    shape: string,
+    color: T
 }
 
 interface LedPv
-    extends PvInterface<string> {
-        shape: string
+    extends PvInterface<string>,
+    LedStatus<Dict<string>>{
 }
 
 export type {

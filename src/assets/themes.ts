@@ -3,10 +3,10 @@ import { Dict } from "./interfaces"
 // Component colors
 const colors: Dict<Dict<string>> = {
     led: {
-        '0': 'radial-gradient(#1bff1d, #14a200)',
-        '1': 'radial-gradient(#f8ff1b, #a29800)',
-        '2': 'radial-gradient(#ff1b1b, #a20000)',
-        '3': 'radial-gradient(#dedede, #9e9e9e)'
+        'ok': 'radial-gradient(#1bff1d, #14a200)',
+        'alert': 'radial-gradient(#f8ff1b, #a29800)',
+        'alarm': 'radial-gradient(#ff1b1b, #a20000)',
+        'nc': 'radial-gradient(#dedede, #9e9e9e)'
     }
 }
 

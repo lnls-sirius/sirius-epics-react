@@ -25,8 +25,9 @@ const LedDoc: React.FC = () => {
     }
 
     const threshold2 = {
-        'alert': 0.105,
-        'alarm': 0.1
+        'alert': 0.1,
+        'som': 0.108,
+        'alarm': 0.105
     }
 
     const threshold3 = {
@@ -38,7 +39,13 @@ const LedDoc: React.FC = () => {
         <div>
             <Wrapper>
                 Square led (square): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'square'} threshold={threshold1}/>
-                Square with round borders(squ_circ): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'squ_circ'} threshold={threshold2}/>
+                Square with round borders(squ_circ): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'squ_circ'} threshold={threshold2} color={{
+                    'ok': 'radial-gradient(#1bff1d, #14a200)',
+                    'alert': 'radial-gradient(#f8ff1b, #a29800)',
+                    'som': '#000000',
+                    'alarm': 'radial-gradient(#ff1b1b, #a20000)',
+                    'nc': 'radial-gradient(#dedede, #9e9e9e)'
+                }}/>
                 Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'} threshold={threshold3}/>
             </Wrapper>
         </div>

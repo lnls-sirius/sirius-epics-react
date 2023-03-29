@@ -29,18 +29,17 @@ class Thresholds {
         return thr_arr;
     }
 
-    get_final_state(value: number, threshold: [string, number][]): number {
-        const size: number = threshold.length;
-        for(let a = 0; a < size; a++) {
+    get_final_state(value: number, threshold: [string, number][]): string {
+        for(let a = 0; a < threshold.length; a++) {
             if(value >= threshold[a][1]){
-                return size - a;
+                return threshold[a][0];
             }
         }
-        return 0;
+        return 'ok';
     }
 
-    get_biggest_threshold(value: number): number {
-        let final_state: number = 0;
+    get_biggest_threshold(value: number): string {
+        let final_state: string = 'ok';
         if( this.thr_dict !== undefined ){
             final_state = this.get_final_state(value, this.thr_arr);
         }
@@ -74,7 +73,7 @@ class EpicsBase<T> {
         return pvData;
     }
 
-    get_threshold(value: number): number {
+    get_threshold(value: number): string {
         return this.thresholds.get_biggest_threshold(value);
     }
 
