@@ -42,7 +42,7 @@ interface EpicsData<T> {
 }
 
 interface LabelPv
-    extends PvInterface<string>, State<string> {
+    extends PvInterface<string> {
 }
 
 interface LedStatus<T> {

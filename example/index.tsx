@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import styled from 'styled-components'
 import TooltipDoc from './tooltip'
 import LedDoc from './led'
+import LabelDoc from './label'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
@@ -32,7 +33,7 @@ root.render(
       <LedDoc/>
     </Wrapper>
     <Wrapper>
-      {/* <LabelDoc/> */}
+      <LabelDoc/>
     </Wrapper>
   </React.StrictMode>
 )
