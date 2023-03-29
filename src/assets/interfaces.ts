@@ -1,4 +1,3 @@
-import Popup_List from "./alert";
 
 interface PvListInterface {
     pv_list: Array<string>
@@ -6,7 +5,6 @@ interface PvListInterface {
 
 interface EpicsChartInterface
     extends PvInterface {
-        popup: Popup_List,
         data: Chart.ChartData,
         alarm?: number,
         alert?: number,
