@@ -2,6 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import SiriusTooltip from '../src/components/SiriusTooltip';
 
+const Wrapper = styled.div`
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+`
+
 const Square = styled.div`
     width: 2em;
     height: 2em;
@@ -10,15 +17,21 @@ const Square = styled.div`
     background-color: #00ff00;
 `
 
+const Divider = styled.span`
+    margin-left: 10em;
+`
+
 const TooltipDoc: React.FC = () => {
     return (
-        <div>
-            This is an example of the tooltip box, press the scroll
-            button to see the tooltip.
+        <Wrapper>
             <SiriusTooltip text="Tooltip text">
                 <Square/>
             </SiriusTooltip>
-        </div>
+            <Divider/>
+            <SiriusTooltip text="Random Tooltip text">
+                A random text
+            </SiriusTooltip>
+        </Wrapper>
     )
 }
 
