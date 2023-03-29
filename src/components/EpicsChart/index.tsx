@@ -15,7 +15,7 @@ class EpicsChart extends Component<EpicsChartInterface>{
   private chartRef: RefChart;
   private data: Chart.ChartData;
   public chart: null|Chart;
-  private refreshInterval: number = 100;
+  private update_interval: number = 100;
   private epics: Epics;
   private timer: null|NodeJS.Timer;
 
@@ -27,12 +27,12 @@ class EpicsChart extends Component<EpicsChartInterface>{
     this.data = props.data;
     this.chart = null;
 
-    if(props.updateInterval!=undefined){
-      this.refreshInterval = props.updateInterval;
+    if(props.update_interval!=undefined){
+      this.update_interval = props.update_interval;
     }
     this.epics = this.handleEpics();
     this.timer = setInterval(
-      this.updateChart, this.refreshInterval);
+      this.updateChart, this.update_interval);
   }
 
   /**
@@ -160,9 +160,9 @@ class EpicsChart extends Component<EpicsChartInterface>{
     let datasetList: number[] = [];
     let labelList: string[] = [];
     let colorList: string[] = [];
-    const pvData: Dict<EpicsData> = this.epics.pvData;
+    const pvData: Dict<EpicsData<number>> = this.epics.pvData;
 
-    Object.entries(pvData).map(async ([pv_name, data]: [string, EpicsData], idx_data: number)=>{
+    Object.entries(pvData).map(async ([pv_name, data]: [string, EpicsData<number>], idx_data: number)=>{
       const pvname: string = this.simplifyLabel(pv_name);
       if(typeof(data.value) == "number"){
         datasetList[idx_data] = data.value;

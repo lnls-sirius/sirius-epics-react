@@ -18,7 +18,7 @@ interface PvListInterface {
 }
 
 interface EpicsChartInterface
-    extends PvInterface {
+    extends PvInterface<string[]> {
         data: Chart.ChartData,
         alarm?: number,
         alert?: number,
@@ -26,23 +26,23 @@ interface EpicsChartInterface
         configOptions: (options: Chart.ChartOptions, pv_name: string|string[]) => any,
 }
 
-interface PvInterface {
-    pv_name: string | string[],
+interface PvInterface<T>{
+    pv_name: T,
     egu?: string,
-    updateInterval?: number,
+    update_interval?: number,
     threshold?: Dict<number>,
-    modifyValue?: (value: any, pvname?: string) => any;
+    modifyValue?: <M>(value: M, pvname?: string) => M;
 }
 
-interface EpicsData {
+interface EpicsData<T> {
     date: null|Date,
-    value: null|number|string,
+    value: null|T,
     datatype: null|string,
     count: null|number
 }
 
 interface LabelPv
-    extends PvInterface, State<string> {
+    extends PvInterface<string>, State<string> {
 }
 
 interface LedStatus
@@ -51,7 +51,7 @@ interface LedStatus
 }
 
 interface LedPv
-    extends PvInterface {
+    extends PvInterface<string> {
         shape: string
 }
 

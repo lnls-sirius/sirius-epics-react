@@ -7,13 +7,13 @@ import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
  * Show a default Label display for EPICS
  * @param props
  *   - state - Initial state of the PV
- * @param refreshInterval - Update interval in milliseconds
+ * @param update_interval - Update interval in milliseconds
  * @param epics - Epics Object
  * @param timer - Timer object
  * @param pv_name - Name of the PV connected
  */
 class SiriusLabel extends React.Component<LabelPv, State<string>>{
-  private refreshInterval: number = 100;
+  private update_interval: number = 100;
   private epics: Epics;
   private timer: null|NodeJS.Timer;
   private pv_name: string;
@@ -27,14 +27,14 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
       value: props.value
     };
 
-    if(props.updateInterval!=undefined){
-      this.refreshInterval = props.updateInterval;
+    if(props.update_interval!=undefined){
+      this.update_interval = props.update_interval;
     }
     this.pv_name = this.savePvName();
     this.epics = this.handleEpics();
     this.updateLabel();
     this.timer = setInterval(
-      this.updateLabel, this.refreshInterval);
+      this.updateLabel, this.update_interval);
   }
 
   /**
@@ -70,8 +70,8 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
    * Update label with measured EPICS value
    */
   updateLabel(): void {
-    const pvData: Dict<EpicsData> = this.epics.pvData;
-    const pvInfo: EpicsData = pvData[this.pv_name];
+    const pvData: Dict<EpicsData<string>> = this.epics.pvData;
+    const pvInfo: EpicsData<string> = pvData[this.pv_name];
     let label_value: string = this.props.value;
     if(pvInfo != undefined){
       if(this.state!=null &&
@@ -83,7 +83,7 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
               label_value = pvInfo.value.toString();
             }
             if(this.props.modifyValue!=undefined){
-              label_value = this.props.modifyValue(
+              label_value = this.props.modifyValue<string>(
                 label_value, this.pv_name);
             }
       }else{
