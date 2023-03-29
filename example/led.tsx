@@ -19,12 +19,27 @@ const Square = styled.div`
 `
 
 const LedDoc: React.FC = () => {
+    const threshold1 = {
+        'alert': 0.06,
+        'alarm': 0.6
+    }
+
+    const threshold2 = {
+        'alert': 0.105,
+        'alarm': 0.1
+    }
+
+    const threshold3 = {
+        'alert': 0.5,
+        'alarm': 0.7
+    }
+
     return (
         <div>
             <Wrapper>
-                Square led (square): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'square'}/>
-                Square with round borders(squ_circ): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'squ_circ'}/>
-                Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'}/>
+                Square led (square): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'square'} threshold={threshold1}/>
+                Square with round borders(squ_circ): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'squ_circ'} threshold={threshold2}/>
+                Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'} threshold={threshold3}/>
             </Wrapper>
         </div>
     )
