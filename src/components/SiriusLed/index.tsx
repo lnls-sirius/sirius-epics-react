@@ -2,7 +2,7 @@ import React from "react";
 import EpicsBase from "../epics";
 import SiriusTooltip from "../SiriusTooltip";
 import { State, LedPv, EpicsData, Dict } from "../../assets/interfaces";
-import { colors, led_shape } from "../../assets/themes";
+import { default_colors, led_shape } from "../../assets/themes";
 import * as S from './styled';
 
 /**
@@ -23,7 +23,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
       value: 'nc'
     };
 
-    this.color_list = this.initialize_led_style(props);
+    this.color_list = this.initialize_led_style(props.color);
     this.epics = this.initialize_epics_base(props);
     this.updateLed();
   }
@@ -43,14 +43,6 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     this.epics.destroy();
   }
 
-  initialize_led_style(props: LedPv) {
-    const { color } = props;
-    if(color !== undefined) {
-      return color;
-    }
-    return colors.led;
-  }
-
   initialize_epics_base(props: LedPv): EpicsBase<string> {
     const { pv_name, threshold, update_interval } = props;
 
@@ -60,6 +52,23 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     return this.epics;
   }
 
+  initialize_led_style(color: Dict<string>) {
+    if(color !== undefined) {
+      color = this.handle_default_color(color);
+      return color;
+    }
+    return default_colors.led;
+  }
+
+  handle_default_color(color: Dict<string>): Dict<string> {
+    if(!('nc' in color)){
+      color["nc"] = default_colors.led["nc"];
+    }
+    if(!('normal' in color)){
+      color["normal"] = default_colors.led["normal"];
+    }
+    return color;
+  }
   /**
    * Update led color with measured EPICS value
    */
