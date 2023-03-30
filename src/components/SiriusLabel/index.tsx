@@ -30,7 +30,7 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
     const { pv_name } = this.props;
     this.epics.set_pvname(pv_name);
   }
-
+  
   /**
    * Unmount Component
    */

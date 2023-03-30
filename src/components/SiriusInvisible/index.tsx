@@ -1,47 +1,51 @@
 import React from "react";
-import Epics from "../../data-access/EPICS/Epics";
+import EpicsBase from "../epics";
 import { PvInterface, Dict, EpicsData } from "../../assets/interfaces";
 
 /**
  * Monitor without display some EPICS PVs
- * @param update_interval - Update interval in milliseconds
- * @param epics - Epics Object
- * @param timer - Timer object
- * @param pv_name - Name of the PV connected
- * @param firstValue - Load first value with more delay
  */
 class SiriusInvisible extends React.Component<PvInterface<string[]>>{
-  private firstValue: boolean = true;
-  private update_interval: number = 100;
-  private epics: Epics;
-  private timer: null|NodeJS.Timer;
-  private pv_name: string[];
+  private epics: EpicsBase<string[]>;
 
   constructor(props: PvInterface<string[]>) {
     super(props);
 
     this.updateLabel = this.updateLabel.bind(this);
-
-    if(props.update_interval!=undefined){
-      this.update_interval = props.update_interval;
-    }
-    this.epics = new Epics(props.pv_name);
-    this.pv_name = this.props.pv_name;
-    this.timer = setInterval(
-      this.updateLabel, this.update_interval);
+    this.epics = this.initialize_epics_base(props);
+    this.updateLabel();
   }
 
+  /**
+   * Save PV name with update
+   */
   componentDidUpdate(): void {
-    this.epics = new Epics(this.props.pv_name);
-    this.pv_name = this.props.pv_name;
+    const { pv_name } = this.props;
+    this.epics.set_pvname(pv_name);
+  }
+
+  /**
+   * Unmount Component
+   */
+  componentWillUnmount(): void {
+    this.epics.destroy();
+  }
+
+  initialize_epics_base(props: PvInterface<string[]>): EpicsBase<string[]> {
+    const { pv_name, threshold, update_interval } = props;
+    this.epics = new EpicsBase(pv_name);
+    this.epics.initialize(pv_name, threshold, update_interval);
+    this.epics.start_timer(this.updateLabel);
+    return this.epics;
   }
 
   /**
    * Update value with measured EPICS value
    */
   updateLabel(): void {
-    const pvData: Dict<EpicsData<string>> = this.epics.pvData;
-    this.pv_name.map((pvname: string) => {
+    const { pv_name } = this.props;
+    const pvData: Dict<EpicsData<string>> = this.epics.get_pv_data();
+    pv_name.map((pvname: string) => {
       const pvInfo: EpicsData<string> = pvData[pvname];
       if(pvInfo != undefined &&
         this.props.modifyValue!=undefined){
@@ -49,24 +53,9 @@ class SiriusInvisible extends React.Component<PvInterface<string[]>>{
             this.props.modifyValue<EpicsData<string>>(
               pvInfo,
               pvname);
-            this.firstValue = false;
           }
-      }else{
-        if(this.firstValue){
-          setTimeout(this.updateLabel, 200);
-        }
       }
     })
-  }
-
-  /**
-   * Unmount Component
-   */
-  componentWillUnmount(): void {
-    if(this.timer!=null){
-      clearInterval(this.timer);
-      this.epics.disconnect();
-    }
   }
 
   render(): React.ReactNode {
