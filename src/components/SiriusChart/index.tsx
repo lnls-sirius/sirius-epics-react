@@ -1,56 +1,83 @@
 import { Component, createRef } from "react";
-import {Chart} from 'chart.js';
-import 'chartjs-adapter-moment';
-import Epics from "../../data-access/EPICS/Epics";
-import { colors } from "../../../assets/themes";
-import { led_limits } from "../../../assets/constants";
-import { Dict, EpicsChartInterface,
-  EpicsData, RefChart } from "../../assets/interfaces";
+import Chart  from 'chart.js/auto';
+import EpicsBase from "../epics";
+import { default_colors } from "../../assets/themes";
+import { Dict, ChartPv, EpicsData, RefChart } from "../../assets/interfaces";
 import * as S from './styled';
 
 /**
  * EPICS Chart that displays a list of PVs.
 */
-class EpicsChart extends Component<EpicsChartInterface>{
+class SiriusChart extends Component<ChartPv>{
   private chartRef: RefChart;
-  private data: Chart.ChartData;
+  private color_list: Dict<string>;
+  private epics: EpicsBase<string[]>;
   public chart: null|Chart;
-  private update_interval: number = 100;
-  private epics: Epics;
-  private timer: null|NodeJS.Timer;
 
-  constructor(props: EpicsChartInterface){
+  constructor(props: ChartPv){
     super(props);
     this.updateChart = this.updateChart.bind(this);
 
     this.chartRef = createRef();
-    this.data = props.data;
+    this.color_list = this.initialize_bar_style(props.color);
+    this.epics = this.initialize_epics_base(props);
     this.chart = null;
-
-    if(props.update_interval!=undefined){
-      this.update_interval = props.update_interval;
-    }
-    this.epics = this.handleEpics();
-    this.timer = setInterval(
-      this.updateChart, this.update_interval);
   }
 
   /**
-   * Connect all the PVs to be analyzed with an EPICS object.
-   * @returns Epics connection
+   * Create a new Chart when the component is mounted.
    */
-  handleEpics(): Epics {
-    if(this.props.pv_name.length != 0){
-      return new Epics(this.props.pv_name);
+  componentDidMount(): void {
+    if(this.chartRef.current != null){
+      this.chart = this.createChart(
+        this.chartRef.current);
+      this.updateChart();
+    }else{
+      console.log("Error!")
     }
-    return new Epics(["FakePV"]);
   }
 
   /**
-   * Update EPICS object
+   * Save PV name with update
    */
   componentDidUpdate(): void {
-    this.epics = this.handleEpics();
+    const { pv_name } = this.props;
+    this.epics.set_pvname(pv_name);
+  }
+
+  /**
+   * Unmount Component
+   */
+  componentWillUnmount(): void {
+    this.epics.destroy();
+  }
+
+  initialize_epics_base(props: ChartPv): EpicsBase<string[]> {
+    const { pv_name, threshold, update_interval } = props;
+
+    this.epics = new EpicsBase(pv_name);
+    this.epics.initialize(pv_name, threshold, update_interval);
+    this.epics.start_timer(this.updateChart);
+
+    return this.epics;
+  }
+
+  initialize_bar_style(color: Dict<string>): Dict<string> {
+    if(color !== undefined) {
+      color = this.handle_default_color(color);
+      return color;
+    }
+    return default_colors.chart;
+  }
+
+  handle_default_color(color: Dict<string>): Dict<string> {
+    if(!('nc' in color)){
+      color["nc"] = default_colors.chart["nc"];
+    }
+    if(!('normal' in color)){
+      color["normal"] = default_colors.chart["normal"];
+    }
+    return color;
   }
 
   /**
@@ -99,7 +126,7 @@ class EpicsChart extends Component<EpicsChartInterface>{
       const [datasetList, labelList]: [
         Chart.ChartDataSets[], string[]] = await this.buildChart();
       let dataset: Chart.ChartDataSets[] = datasetList;
-      dataset = this.limitAxis(datasetList)
+      dataset = this.limitAxis(datasetList);
       this.updateDataset(dataset, labelList);
     }
   }
@@ -110,44 +137,24 @@ class EpicsChart extends Component<EpicsChartInterface>{
    * @returns datasetList with limit axis lines.
    */
   limitAxis(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
-    Object.keys(led_limits).map((label: string) => {
-      const color: string = colors.limits[label];
-      if(datasetList[0].data){
-        const datasetTemp: Chart.ChartDataSets = {
-          data: (datasetList[0].data.map(()=>{return led_limits[label]})),
-          type: 'line',
-          yAxisID: 'y',
-          label: this.capitalize(label),
-          borderColor: color,
-          backgroundColor: color
+    const { threshold } = this.props;
+    if(threshold){
+      Object.entries(threshold).map(([label, value]: [string, number]) => {
+        const color: string = this.color_list[label];
+        if(datasetList[0].data){
+          const datasetTemp: Chart.ChartDataSets = {
+            data: (datasetList[0].data.map(()=>{return value})),
+            type: 'line',
+            yAxisID: 'y',
+            label: this.capitalize(label),
+            borderColor: color,
+            backgroundColor: color
+          }
+          datasetList.push(datasetTemp);
         }
-        datasetList.push(datasetTemp);
-      }
-    })
+      })
+    }
     return datasetList
-  }
-
-  /**
-   * Change bar color with alert or alarm parameters.
-   * @param value - Value measured by the PV.
-   * @param pv_name - Name of the PV being analyzed.
-   * @returns color of the bar representing the analysed PV.
-   */
-  // Change for function of EpicsBase
-  verifyAlertAlarm(value: number): string {
-    if(this.props.alarm!=undefined){
-      if(value >= this.props.alarm){
-        return colors.limits.alarm;
-      }
-    }
-
-    if(this.props.alert != undefined){
-      if(value >= this.props.alert){
-        return colors.limits.alert;
-      }
-    }
-
-    return colors.limits.normal;
   }
 
   /**
@@ -160,15 +167,14 @@ class EpicsChart extends Component<EpicsChartInterface>{
     let datasetList: number[] = [];
     let labelList: string[] = [];
     let colorList: string[] = [];
-    const pvData: Dict<EpicsData<number>> = this.epics.pvData;
-
+    const pvData: any = this.epics.get_pv_data();
     Object.entries(pvData).map(async ([pv_name, data]: [string, EpicsData<number>], idx_data: number)=>{
       const pvname: string = this.simplifyLabel(pv_name);
+      const threshold_type = this.epics.get_threshold(data.value);
       if(typeof(data.value) == "number"){
         datasetList[idx_data] = data.value;
         labelList[idx_data] = pvname;
-        colorList[idx_data] = this.verifyAlertAlarm(
-          data.value, pv_name);
+        colorList[idx_data] = this.color_list[threshold_type];
       }
     })
     let dataset: Chart.ChartDataSets[] = [{
@@ -235,7 +241,6 @@ class EpicsChart extends Component<EpicsChartInterface>{
 
     const config: any = {
       type: "bar",
-      data: this.data,
       options: chartOptions
     }
 
@@ -250,38 +255,15 @@ class EpicsChart extends Component<EpicsChartInterface>{
     );
   }
 
-  /**
-   * Create a new Chart when the component is mounted.
-   */
-  componentDidMount(): void {
-    if(this.chartRef.current != null){
-      this.chart = this.createChart(
-        this.chartRef.current);
-      this.updateChart();
-    }else{
-      console.log("Error!")
-    }
-  }
-
-  /**
-   * Unmount the chart
-   */
-  componentWillUnmount(): void {
-    if(this.timer!=null){
-      clearInterval(this.timer);
-      this.epics.disconnect();
-    }
-  }
-
   render() {
     return (
       <S.ChartWrapper>
         <S.Chart
-          id="canvas"
+          id="canva"
           ref={this.chartRef}/>
       </S.ChartWrapper>
     )
   }
 }
 
-export default EpicsChart;
+export default SiriusChart;

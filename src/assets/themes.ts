@@ -1,12 +1,17 @@
 import { Dict } from "./interfaces"
 
-// Component colors
-const colors: Dict<Dict<string>> = {
+// Component default colors
+const default_colors: Dict<Dict<string>> = {
     led: {
-        'ok': 'radial-gradient(#1bff1d, #14a200)',
+        'normal': 'radial-gradient(#1bff1d, #14a200)',
         'alert': 'radial-gradient(#f8ff1b, #a29800)',
         'alarm': 'radial-gradient(#ff1b1b, #a20000)',
         'nc': 'radial-gradient(#dedede, #9e9e9e)'
+    },
+    chart: {
+        'normal': '#18d81a',
+        'alert': '#d9df17',
+        'alarm': '#e11919'
     }
 }
 
@@ -20,6 +25,6 @@ const led_shape: Dict<string> = {
 }
 
 export {
-    colors,
+    default_colors,
     led_shape
 }

@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   grid-template-columns: 20% 20% 20% 20% 20%;
   text-align: center;
   align-items: center;
-  justify-content: space-between;/
+  justify-content: space-between;
 `
 
 const LabelDoc: React.FC = () => {

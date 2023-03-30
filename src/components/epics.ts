@@ -35,11 +35,11 @@ class Thresholds {
                 return threshold[a][0];
             }
         }
-        return 'ok';
+        return 'normal';
     }
 
     get_biggest_threshold(value: number): string {
-        let final_state: string = 'ok';
+        let final_state: string = 'normal';
         if( this.thr_dict !== undefined ){
             final_state = this.get_final_state(value, this.thr_arr);
         }

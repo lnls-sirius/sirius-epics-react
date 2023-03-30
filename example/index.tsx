@@ -4,13 +4,14 @@ import styled from 'styled-components'
 import TooltipDoc from './tooltip'
 import LedDoc from './led'
 import LabelDoc from './label'
+import InvisibleDoc from './invisible'
+import ChartDoc from './chart'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 const Wrapper = styled.div`
-  width: 100%;
   background-color: #ffa78b;
-  margin-left: 2em;
+  margin-left: 3em;
   margin-top: 2em;
   padding: 1em;
   border-radius: 1em 0em 0em 1em;
@@ -24,7 +25,7 @@ const Title = styled.div`
 `
 
 root.render(
-  <React.StrictMode>
+  <div>
     <Title>EPICS React Components</Title>
     <Wrapper>
       <TooltipDoc/>
@@ -35,5 +36,11 @@ root.render(
     <Wrapper>
       <LabelDoc/>
     </Wrapper>
-  </React.StrictMode>
+    <Wrapper>
+      <InvisibleDoc/>
+    </Wrapper>
+    <Wrapper>
+      <ChartDoc/>
+    </Wrapper>
+  </div>
 )

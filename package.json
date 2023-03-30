@@ -33,6 +33,7 @@
   "homepage": "https://github.com/lnls-sirius/epics-react#readme",
   "devDependencies": {
     "@types/react": "^18.0.30",
+    "@types/chart.js": "^2.9.37",
     "@types/react-dom": "^18.0.11",
     "@types/styled-components": "^5.1.26",
     "parcel": "^2.8.3",
@@ -43,6 +44,8 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.7",
+    "chart.js": "^4.2.1",
+    "chartjs-adapter-moment": "^1.0.1",
     "react-popper": "^2.3.0",
     "styled-components": "^5.3.9",
     "tslib": "^2.5.0"

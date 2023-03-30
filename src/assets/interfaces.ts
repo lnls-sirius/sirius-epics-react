@@ -17,13 +17,11 @@ interface PvListInterface {
     pv_list: Array<string>
 }
 
-interface EpicsChartInterface
+interface ChartPv
     extends PvInterface<string[]> {
-        data: Chart.ChartData,
-        alarm?: number,
-        alert?: number,
-        color_axis: string[],
-        configOptions: (options: Chart.ChartOptions, pv_name: string|string[]) => any,
+        color: Dict<string>,
+        configOptions: (
+            options: Chart.ChartOptions, pv_name: string|string[]) => any
 }
 
 interface PvInterface<T>{
@@ -57,7 +55,7 @@ interface LedPv
 
 export type {
     PvListInterface,
-    EpicsChartInterface,
+    ChartPv,
     PvInterface,
     EpicsData,
     PvTooltipInterface,

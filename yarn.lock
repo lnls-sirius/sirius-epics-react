@@ -180,6 +180,11 @@
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
 
+"@kurkle/color@^0.3.0":
+  version "0.3.2"
+  resolved "https://registry.npmjs.org/@kurkle/color/-/color-0.3.2.tgz"
+  integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
+
 "@lezer/common@^0.15.0", "@lezer/common@^0.15.7":
   version "0.15.12"
   resolved "https://registry.npmjs.org/@lezer/common/-/common-0.15.12.tgz"
@@ -790,6 +795,11 @@
   resolved "https://registry.npmjs.org/@trysound/sax/-/sax-0.2.0.tgz"
   integrity sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==
 
+"@types/chartjs@^0.0.31":
+  version "0.0.31"
+  resolved "https://registry.npmjs.org/@types/chartjs/-/chartjs-0.0.31.tgz"
+  integrity sha512-eF1AgrIO0qP9KJYwM2dTKL2pczTjiLa0hfmZdQfKiqFq5WIvFTKPn1gkgADitF5sT4byEyq4EFdMVvuPIk6zeQ==
+
 "@types/hoist-non-react-statics@*":
   version "3.3.1"
   resolved "https://registry.npmjs.org/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz"
@@ -943,6 +953,18 @@ chalk@^4.1.0:
   dependencies:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
+
+chart.js@^4.2.1, chart.js@>=3.0.0:
+  version "4.2.1"
+  resolved "https://registry.npmjs.org/chart.js/-/chart.js-4.2.1.tgz"
+  integrity sha512-6YbpQ0nt3NovAgOzbkSSeeAQu/3za1319dPUQTXn9WcOpywM8rGKxJHrhS8V8xEkAlk8YhEfjbuAPfUyp6jIsw==
+  dependencies:
+    "@kurkle/color" "^0.3.0"
+
+chartjs-adapter-moment@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/chartjs-adapter-moment/-/chartjs-adapter-moment-1.0.1.tgz"
+  integrity sha512-Uz+nTX/GxocuqXpGylxK19YG4R3OSVf8326D+HwSTsNw1LgzyIGRo+Qujwro1wy6X+soNSnfj5t2vZ+r6EaDmA==
 
 chrome-trace-event@^1.0.2:
   version "1.0.3"
@@ -1321,6 +1343,11 @@ micromatch@^4.0.5:
   dependencies:
     braces "^3.0.2"
     picomatch "^2.3.1"
+
+moment@^2.10.2:
+  version "2.29.4"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 ms@2.1.2:
   version "2.1.2"
