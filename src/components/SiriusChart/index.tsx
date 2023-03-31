@@ -12,6 +12,7 @@ class SiriusChart extends Component<ChartPv>{
   private chartRef: RefChart;
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;
+  private labelList: string[];
   public chart: null|Chart;
 
   constructor(props: ChartPv){
@@ -21,6 +22,7 @@ class SiriusChart extends Component<ChartPv>{
     this.chartRef = createRef();
     this.color_list = this.initialize_bar_style(props.color);
     this.epics = this.initialize_epics_base(props);
+    this.labelList = this.initialize_label_list(props.label);
     this.chart = null;
   }
 
@@ -70,6 +72,21 @@ class SiriusChart extends Component<ChartPv>{
     return default_colors.chart;
   }
 
+  initialize_label_list(labels: string[]): string[] {
+    let labelList: string[] = [];
+    const pvData: any = this.epics.get_pv_data();
+    Object.keys(pvData).map((pv_name: string, idx_data: number)=>{
+      let label: string = pv_name;
+      if(labels!==undefined){
+        if(labels[idx_data]!==undefined){
+          label = labels[idx_data];
+        }
+      }
+      labelList[idx_data] = label;
+    })
+    return labelList
+  }
+
   handle_default_color(color: Dict<string>): Dict<string> {
     if(!('nc' in color)){
       color["nc"] = default_colors.chart["nc"];
@@ -91,21 +108,6 @@ class SiriusChart extends Component<ChartPv>{
       this.chart.data.datasets = newData;
       this.chart.update();
     }
-  }
-
-  /**
-   * Remove redundant PV information from the PV name
-   *
-   * @param pv_name - PV name
-   * @param value - Position of the relevant information split with ':'
-   * @returns simplified PV name
-   */
-  simplifyLabel(pv_name: string, value?: number): string {
-    if(value == undefined){
-        value = 1;
-    }
-    const name_split: string[] = pv_name.split(":")
-    return name_split[value]
   }
 
   /**
@@ -163,17 +165,14 @@ class SiriusChart extends Component<ChartPv>{
    *  Chart Datasets List, Chart Labels list
    * ]
    */
-  async buildChart(): Promise<[Chart.ChartDataSets[], string[]]> {
+  async buildChart(): Promise<Chart.ChartDataSets[]> {
     let datasetList: number[] = [];
-    let labelList: string[] = [];
     let colorList: string[] = [];
     const pvData: any = this.epics.get_pv_data();
     Object.entries(pvData).map(async ([pv_name, data]: [string, EpicsData<number>], idx_data: number)=>{
-      const pvname: string = this.simplifyLabel(pv_name);
       const threshold_type = this.epics.get_threshold(data.value);
       if(typeof(data.value) == "number"){
         datasetList[idx_data] = data.value;
-        labelList[idx_data] = pvname;
         colorList[idx_data] = this.color_list[threshold_type];
       }
     })
@@ -183,7 +182,7 @@ class SiriusChart extends Component<ChartPv>{
       borderColor: colorList
     }]
 
-    return [dataset, labelList];
+    return dataset;
   }
 
   /**

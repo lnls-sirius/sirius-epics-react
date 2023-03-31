@@ -68,7 +68,7 @@ class EpicsBase<T> {
         this.create_epics();
 
         if(threshold !== undefined) {
-            this.set_thresholds(threshold);
+            this.thresholds.set_thresholds(threshold);
         }
         if(update_interval !=undefined){
             this.set_update_interval(update_interval);
@@ -95,10 +95,6 @@ class EpicsBase<T> {
 
     set_update_interval(milliseconds: number): void {
         this.update_interval = milliseconds;
-    }
-
-    set_thresholds(thresholds: Dict<number>): void {
-        this.thresholds.set_thresholds(thresholds);
     }
 
     create_epics(): Epics {
