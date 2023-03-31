@@ -143,7 +143,7 @@ class SiriusChart extends Component<ChartPv>{
   create_threshold_line(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
     const { threshold } = this.props;
     let dataset_threshold: Chart.ChartDataSets = this.threshold_lines;
-    if(threshold && this.threshold_lines.length == 0){
+    if(threshold && this.threshold_lines.length != datasetList[0].data.length){
       Object.entries(threshold).map(([label, value]: [string, number]) => {
         const color: string = this.color_list[label];
         if(datasetList[0].data.length > 0){
