@@ -13,6 +13,7 @@ class SiriusChart extends Component<ChartPv>{
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;
   private labelList: string[];
+  private threshold_lines: Chart.ChartDataSets[];
   public chart: null|Chart;
 
   constructor(props: ChartPv){
@@ -23,6 +24,7 @@ class SiriusChart extends Component<ChartPv>{
     this.color_list = this.initialize_bar_style(props.color);
     this.epics = this.initialize_epics_base(props);
     this.labelList = this.initialize_label_list(props.label);
+    this.threshold_lines = [];
     this.chart = null;
   }
 
@@ -125,11 +127,11 @@ class SiriusChart extends Component<ChartPv>{
    */
   async updateChart(): Promise<void> {
     if(this.chart != null){
-      const [datasetList, labelList]: [
-        Chart.ChartDataSets[], string[]] = await this.buildChart();
+      const datasetList: Chart.ChartDataSets[] = await this.buildChart();
       let dataset: Chart.ChartDataSets[] = datasetList;
-      dataset = this.limitAxis(datasetList);
-      this.updateDataset(dataset, labelList);
+      this.threshold_lines = this.create_threshold_line(dataset);
+      dataset = this.add_thresholds(dataset);
+      this.updateDataset(dataset, this.labelList);
     }
   }
 
@@ -138,25 +140,32 @@ class SiriusChart extends Component<ChartPv>{
    * @param datasetList - Dataset to be added to the chart.
    * @returns datasetList with limit axis lines.
    */
-  limitAxis(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
+  create_threshold_line(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
     const { threshold } = this.props;
-    if(threshold){
+    let dataset_threshold: Chart.ChartDataSets = this.threshold_lines;
+    if(threshold && this.threshold_lines.length == 0){
       Object.entries(threshold).map(([label, value]: [string, number]) => {
         const color: string = this.color_list[label];
-        if(datasetList[0].data){
+        if(datasetList[0].data.length > 0){
           const datasetTemp: Chart.ChartDataSets = {
             data: (datasetList[0].data.map(()=>{return value})),
             type: 'line',
             yAxisID: 'y',
             label: this.capitalize(label),
-            borderColor: color,
-            backgroundColor: color
+            borderColor: color
           }
-          datasetList.push(datasetTemp);
+          dataset_threshold.push(datasetTemp);
         }
       })
     }
-    return datasetList
+    return dataset_threshold;
+  }
+
+  add_thresholds(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
+    this.threshold_lines.map((axis_data: Chart.ChartDataSets) => {
+      datasetList.push(axis_data);
+    });
+    return datasetList;
   }
 
   /**
