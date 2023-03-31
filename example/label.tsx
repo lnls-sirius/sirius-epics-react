@@ -16,7 +16,7 @@ const LabelDoc: React.FC = () => {
             <Wrapper>
                 <SiriusLabel pv_name={'RAD:ELSE:Gamma'} egu='KWh'/>
                 <SiriusLabel pv_name={'RAD:Berthold:Gamma'} egu='m'/>
-                <SiriusLabel pv_name={'RAD:Thermo1:Gamma'} egu='uSv'/>
+                <SiriusLabel pv_name={'RAD:Thermo1:Gamma'} precision={5} egu='uSv'/>
                 <SiriusLabel pv_name={'TS-02:DI-Scrn:ScrnType-Sel'} egu='Sv'/>
             </Wrapper>
         </div>

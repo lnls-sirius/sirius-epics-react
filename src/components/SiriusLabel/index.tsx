@@ -10,6 +10,7 @@ import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
  */
 class SiriusLabel extends React.Component<LabelPv, State<string>>{
   private epics: EpicsBase<string>;
+  private precision: number|undefined;
 
   constructor(props: LabelPv) {
     super(props);
@@ -20,6 +21,7 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
     };
 
     this.epics = this.initialize_epics_base(props);
+    this.precision = props.precision;
     this.updateLabel();
   }
 
@@ -30,7 +32,7 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
     const { pv_name } = this.props;
     this.epics.set_pvname(pv_name);
   }
-  
+
   /**
    * Unmount Component
    */
@@ -61,8 +63,8 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
       if(isNotNull){
         const isNumber = pvInfo.datatype == "DBR_DOUBLE" &&
           typeof(pvInfo.value) == "number";
-        if(isNumber){
-          label_value = pvInfoVal.toFixed(3);
+        if(isNumber && this.precision!==undefined){
+          label_value = pvInfoVal.toFixed(this.precision);
         }else{
           label_value = pvInfoVal.toString();
         }

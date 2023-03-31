@@ -42,6 +42,7 @@ interface EpicsData<T> {
 
 interface LabelPv
     extends PvInterface<string> {
+        precision?: number
 }
 
 interface LedStatus<T> {
