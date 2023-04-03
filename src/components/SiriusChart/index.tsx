@@ -3,6 +3,7 @@ import Chart  from 'chart.js/auto';
 import EpicsBase from "../epics";
 import { default_colors } from "../../assets/themes";
 import { Dict, ChartPv, EpicsData, RefChart } from "../../assets/interfaces";
+import { chartOptions } from "./options";
 import * as S from './styled';
 
 /**
@@ -152,7 +153,8 @@ class SiriusChart extends Component<ChartPv>{
             type: 'line',
             yAxisID: 'y',
             label: this.capitalize(label),
-            borderColor: color
+            borderColor: color,
+            backgroundColor: color
           }
           dataset_threshold.push(datasetTemp);
         }
@@ -178,7 +180,8 @@ class SiriusChart extends Component<ChartPv>{
     let datasetList: number[] = [];
     let colorList: string[] = [];
     const pvData: any = this.epics.get_pv_data();
-    Object.entries(pvData).map(async ([pv_name, data]: [string, EpicsData<number>], idx_data: number)=>{
+    Object.entries(pvData).map(
+        async ([pv_name, data]: [string, EpicsData<number>], idx_data: number)=>{
       const threshold_type = this.epics.get_threshold(data.value);
       if(typeof(data.value) == "number"){
         datasetList[idx_data] = data.value;
@@ -200,52 +203,6 @@ class SiriusChart extends Component<ChartPv>{
    * @returns new Chart object
    */
   createChart(reference: HTMLCanvasElement): Chart {
-    const scalesOpt: Dict<any> = {
-      x: {
-        display: true,
-        type: 'category',
-        ticks: {
-          maxRotation: 45,
-          minRotation: 45,
-          font: {
-            size: 15
-          }
-        }
-      },
-      y: {
-        display: true,
-        ticks: {
-          font: {
-            size: 15
-          }
-        },
-        beginAtZero: true
-      }
-    }
-
-    const chartOptions: Chart.ChartOptions = {
-      animation: {
-        duration: 0
-      },
-      spanGaps: true,
-      responsive: true,
-      maintainAspectRatio: false,
-      elements: {
-        point: {
-          radius: 0
-        }
-      },
-      hover: {
-          mode: "nearest",
-          intersect: true
-      },
-      scales: scalesOpt,
-      plugins:{
-        legend: {
-            display: false
-        }
-      }
-    }
 
     const config: any = {
       type: "bar",
