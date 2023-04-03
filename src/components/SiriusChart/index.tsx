@@ -67,7 +67,7 @@ class SiriusChart extends Component<ChartPv>{
     return this.epics;
   }
 
-  initialize_bar_style(color: Dict<string>): Dict<string> {
+  initialize_bar_style(color: Dict<string>|undefined): Dict<string> {
     if(color !== undefined) {
       color = this.handle_default_color(color);
       return color;

@@ -52,7 +52,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     return this.epics;
   }
 
-  initialize_led_style(color: Dict<string>) {
+  initialize_led_style(color: Dict<string>|undefined) {
     if(color !== undefined) {
       color = this.handle_default_color(color);
       return color;

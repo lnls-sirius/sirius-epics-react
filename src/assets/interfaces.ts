@@ -19,7 +19,7 @@ interface PvListInterface {
 
 interface ChartPv
     extends PvInterface<string[]> {
-        color: Dict<string>,
+        color?: Dict<string>,
         label: string[],
         configOptions: (
             options: any, pv_name: string|string[]) => any
@@ -47,7 +47,7 @@ interface LabelPv
 
 interface LedStatus<T> {
     shape: string,
-    color: T
+    color?: T
 }
 
 interface LedPv
