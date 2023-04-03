@@ -2,7 +2,7 @@ import { Component, createRef } from "react";
 import Chart  from 'chart.js/auto';
 import EpicsBase from "../epics";
 import { default_colors } from "../../assets/themes";
-import { Dict, ChartPv, EpicsData, RefChart } from "../../assets/interfaces";
+import { Dict, ChartPv, RefChart } from "../../assets/interfaces";
 import { chartOptions } from "./options";
 import * as S from './styled';
 
@@ -76,9 +76,9 @@ class SiriusChart extends Component<ChartPv>{
   }
 
   initialize_label_list(labels: string[]): string[] {
+    const { pv_name } = this.props;
     let labelList: string[] = [];
-    const pvData: any = this.epics.get_pv_data();
-    Object.keys(pvData).map((pv_name: string, idx_data: number)=>{
+    pv_name.map((pv_name: string, idx_data: number)=>{
       let label: string = pv_name;
       if(labels!==undefined){
         if(labels[idx_data]!==undefined){
@@ -143,8 +143,9 @@ class SiriusChart extends Component<ChartPv>{
    */
   create_threshold_line(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
     const { threshold } = this.props;
+    const line_all_element: boolean = this.threshold_lines.length != datasetList[0].data.length;
     let dataset_threshold: Chart.ChartDataSets = this.threshold_lines;
-    if(threshold && this.threshold_lines.length != datasetList[0].data.length){
+    if(threshold && line_all_element){
       Object.entries(threshold).map(([label, value]: [string, number]) => {
         const color: string = this.color_list[label];
         if(datasetList[0].data.length > 0){
@@ -177,14 +178,15 @@ class SiriusChart extends Component<ChartPv>{
    * ]
    */
   async buildChart(): Promise<Chart.ChartDataSets[]> {
+    const { pv_name } = this.props;
     let datasetList: number[] = [];
     let colorList: string[] = [];
     const pvData: any = this.epics.get_pv_data();
-    Object.entries(pvData).map(
-        async ([pv_name, data]: [string, EpicsData<number>], idx_data: number)=>{
-      const threshold_type = this.epics.get_threshold(data.value);
-      if(typeof(data.value) == "number"){
-        datasetList[idx_data] = data.value;
+    pv_name.map(async (pvname: string, idx_data: number)=>{
+      const pvInfo: number = pvData[pvname];
+      const threshold_type = this.epics.get_threshold(pvInfo.value);
+      if(typeof(pvInfo.value) == "number"){
+        datasetList[idx_data] = pvInfo.value;
         colorList[idx_data] = this.color_list[threshold_type];
       }
     })
