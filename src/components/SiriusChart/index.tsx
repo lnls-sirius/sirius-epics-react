@@ -214,8 +214,8 @@ class SiriusChart extends Component<ChartPv>{
       options: chartOptions
     }
 
-    if(this.props.configOptions != undefined){
-      config.options = this.props.configOptions(
+    if(this.props.modifyValue != undefined){
+      config.options = this.props.modifyValue(
         config.options, this.props.pv_name);
     }
 

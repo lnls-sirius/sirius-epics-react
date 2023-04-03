@@ -43,16 +43,14 @@ class SiriusInvisible extends React.Component<PvInterface<string[]>>{
    * Update value with measured EPICS value
    */
   updateLabel(): void {
-    const { pv_name } = this.props;
+    const { pv_name, modifyValue } = this.props;
     const pvData: Dict<EpicsData<string>> = this.epics.get_pv_data();
     pv_name.map((pvname: string) => {
       const pvInfo: EpicsData<string> = pvData[pvname];
-      if(pvInfo != undefined &&
-        this.props.modifyValue!=undefined){
+      if(pvInfo != undefined && modifyValue!=undefined){
           if(pvInfo.value){
-            this.props.modifyValue<EpicsData<string>>(
-              pvInfo,
-              pvname);
+            modifyValue<EpicsData<string>>(
+              pvInfo, [pvname]);
           }
       }
     })
