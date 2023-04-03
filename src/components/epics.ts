@@ -80,6 +80,17 @@ class EpicsCon {
         this.epics = this.create_epics();
     }
 
+    static remove_pv<T extends string|string[]>(rem_pv: T){
+        let pv_list: string[] = this.pv_name;
+        const rem_pv_list: string[] = this.turn2list<T>(rem_pv);
+        rem_pv_list.map((pvname: string) => {
+            if(pvname in this.pv_name){
+                delete pv_list[pvname];
+            }
+        })
+        this.pv_name = pv_list;
+    }
+
     static get_pv_data<M>(): Dict<EpicsData<M>> {
         let pvData: Dict<EpicsData<M>> = this.epics.pvData;
         return pvData;
@@ -138,10 +149,14 @@ class EpicsBase<T extends string|string[]> {
         EpicsCon.add_new_pv<T>(this.pv_name);
     }
 
+    unsubscribe2epics_con(){
+        EpicsCon.remove_pv<T>(this.pv_name);
+    }
+
     destroy(): void {
         if(this.timer!=null){
             clearInterval(this.timer);
-            // this.epics.disconnect();
+            this.unsubscribe2epics_con();
         }
     }
 }
