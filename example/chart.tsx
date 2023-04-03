@@ -21,7 +21,7 @@ const ChartDoc: React.FC = () => {
                 pv_name={['RAD:Thermo1:Gamma', 'RAD:Thermo2:Gamma', 'RAD:Thermo3:Gamma', 'RAD:Thermo4:Gamma']}
                 label={['Thermo1', 'Thermo2', 'Thermo3', 'Thermo4']}
                 threshold={threshold}
-                configOptions={function (options: Chart.ChartOptions, pv_name: string | string[]) {return options}}/>
+                configOptions={function (options: any, pv_name: string | string[]) {return options}}/>
         </Wrapper>
     )
 }

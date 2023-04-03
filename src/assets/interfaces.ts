@@ -22,7 +22,7 @@ interface ChartPv
         color: Dict<string>,
         label: string[],
         configOptions: (
-            options: Chart.ChartOptions, pv_name: string|string[]) => any
+            options: any, pv_name: string|string[]) => any
 }
 
 interface PvInterface<T>{

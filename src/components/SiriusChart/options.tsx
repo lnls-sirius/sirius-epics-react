@@ -1,3 +1,5 @@
+import { Dict } from "../../assets/interfaces"
+
 const scalesOpt: Dict<any> = {
     x: {
         display: true,
@@ -21,7 +23,7 @@ const scalesOpt: Dict<any> = {
     }
 }
 
-const chartOptions: Chart.ChartOptions = {
+const chartOptions: any = {
     animation: {
         duration: 0
     },

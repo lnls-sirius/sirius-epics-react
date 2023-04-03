@@ -1,8 +1,8 @@
-import { Component, createRef } from "react";
+import React, { Component, createRef } from "react";
 import Chart  from 'chart.js/auto';
 import EpicsBase from "../epics";
 import { default_colors } from "../../assets/themes";
-import { Dict, ChartPv, RefChart } from "../../assets/interfaces";
+import { Dict, ChartPv, RefChart, EpicsData } from "../../assets/interfaces";
 import { chartOptions } from "./options";
 import * as S from './styled';
 
@@ -14,7 +14,7 @@ class SiriusChart extends Component<ChartPv>{
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;
   private labelList: string[];
-  private threshold_lines: Chart.ChartDataSets[];
+  private threshold_lines: ChartDataSet[];
   public chart: null|Chart;
 
   constructor(props: ChartPv){
@@ -128,8 +128,8 @@ class SiriusChart extends Component<ChartPv>{
    */
   async updateChart(): Promise<void> {
     if(this.chart != null){
-      const datasetList: Chart.ChartDataSets[] = await this.buildChart();
-      let dataset: Chart.ChartDataSets[] = datasetList;
+      const datasetList: ChartDataSet[] = await this.buildChart();
+      let dataset: ChartDataSet[] = datasetList;
       this.threshold_lines = this.create_threshold_line(dataset);
       dataset = this.add_thresholds(dataset);
       this.updateDataset(dataset, this.labelList);
@@ -141,21 +141,22 @@ class SiriusChart extends Component<ChartPv>{
    * @param datasetList - Dataset to be added to the chart.
    * @returns datasetList with limit axis lines.
    */
-  create_threshold_line(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
+  create_threshold_line(datasetList: ChartDataSet[]): ChartDataSet[] {
     const { threshold } = this.props;
     const line_all_element: boolean = this.threshold_lines.length != datasetList[0].data.length;
-    let dataset_threshold: Chart.ChartDataSets = this.threshold_lines;
+    let dataset_threshold: ChartDataSet[] = this.threshold_lines;
     if(threshold && line_all_element){
       Object.entries(threshold).map(([label, value]: [string, number]) => {
         const color: string = this.color_list[label];
         if(datasetList[0].data.length > 0){
-          const datasetTemp: Chart.ChartDataSets = {
+          const datasetTemp: ChartDataSet = {
             data: (datasetList[0].data.map(()=>{return value})),
             type: 'line',
             yAxisID: 'y',
             label: this.capitalize(label),
             borderColor: color,
-            backgroundColor: color
+            fillColor: color,
+            strokeColor: color
           }
           dataset_threshold.push(datasetTemp);
         }
@@ -164,8 +165,8 @@ class SiriusChart extends Component<ChartPv>{
     return dataset_threshold;
   }
 
-  add_thresholds(datasetList: Chart.ChartDataSets[]): Chart.ChartDataSets[] {
-    this.threshold_lines.map((axis_data: Chart.ChartDataSets) => {
+  add_thresholds(datasetList: ChartDataSet[]): ChartDataSet[] {
+    this.threshold_lines.map((axis_data: ChartDataSet) => {
       datasetList.push(axis_data);
     });
     return datasetList;
@@ -177,20 +178,22 @@ class SiriusChart extends Component<ChartPv>{
    *  Chart Datasets List, Chart Labels list
    * ]
    */
-  async buildChart(): Promise<Chart.ChartDataSets[]> {
+  async buildChart(): Promise<ChartDataSet[]> {
     const { pv_name } = this.props;
     let datasetList: number[] = [];
     let colorList: string[] = [];
     const pvData: any = this.epics.get_pv_data();
     pv_name.map(async (pvname: string, idx_data: number)=>{
-      const pvInfo: number = pvData[pvname];
-      const threshold_type = this.epics.get_threshold(pvInfo.value);
-      if(typeof(pvInfo.value) == "number"){
-        datasetList[idx_data] = pvInfo.value;
-        colorList[idx_data] = this.color_list[threshold_type];
+      const pvInfo: EpicsData<string> = pvData[pvname];
+      if('value' in pvInfo){
+        const threshold_type = this.epics.get_threshold(Number(pvInfo.value));
+        if(typeof(pvInfo.value) == "number"){
+          datasetList[idx_data] = pvInfo.value;
+          colorList[idx_data] = this.color_list[threshold_type];
+        }
       }
     })
-    let dataset: Chart.ChartDataSets[] = [{
+    let dataset: any[] = [{
       data: datasetList,
       backgroundColor: colorList,
       borderColor: colorList
@@ -222,7 +225,7 @@ class SiriusChart extends Component<ChartPv>{
     );
   }
 
-  render() {
+  render(): React.ReactNode {
     return (
       <S.ChartWrapper>
         <S.Chart

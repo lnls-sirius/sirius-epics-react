@@ -58,19 +58,20 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
     const pvInfo: EpicsData<string> = pvData[pv_name];
     let label_value: string = 'NC';
     if(pvInfo != undefined){
-      const pvInfoVal: string|number = pvInfo.value;
-      const isNotNull: boolean = this.state!=null && pvInfoVal != null;
-      if(isNotNull){
-        const isNumber = pvInfo.datatype == "DBR_DOUBLE" &&
-          typeof(pvInfo.value) == "number";
-        if(isNumber && this.precision!==undefined){
-          label_value = pvInfoVal.toFixed(this.precision);
-        }else{
-          label_value = pvInfoVal.toString();
-        }
-        if(modifyValue!=undefined){
-          label_value = modifyValue<string>(
-            label_value, pv_name);
+      if(pvInfo.value != undefined){
+        const pvInfoVal: string|number = pvInfo.value;
+        if(this.state!=null && pvInfoVal != null){
+          const isNumber = pvInfo.datatype == "DBR_DOUBLE" &&
+            typeof(pvInfoVal) == "number";
+          if(isNumber && this.precision!==undefined){
+            label_value = Number(pvInfoVal).toFixed(this.precision);
+          }else{
+            label_value = pvInfoVal.toString();
+          }
+          if(modifyValue!=undefined){
+            label_value = modifyValue<string>(
+              label_value, pv_name);
+          }
         }
       }
     }

@@ -1,4 +1,4 @@
-import Epics from "../data-access/EPICS/Epics";
+import Epics from "../data_access/Epics";
 import { Dict, EpicsData } from "../assets/interfaces";
 
 class Thresholds {
@@ -50,7 +50,7 @@ class EpicsCon {
     private static epics: Epics = new Epics([]);
     private static pv_name: string[] = [];
 
-    static turn2list<T extends string>(new_pv: T): string[]{
+    static turn2list<T extends string|string[]>(new_pv: T): string[]{
         if(Array.isArray(new_pv)){
             return new_pv;
         }
@@ -69,12 +69,10 @@ class EpicsCon {
 
     static create_epics(){
         this.epics.disconnect();
-        console.log(this.pv_name);
-        console.log(this.epics);
         return new Epics(this.pv_name);
     }
 
-    static add_new_pv<T extends string>(new_pv: T){
+    static add_new_pv<T extends string|string[]>(new_pv: T){
         let list2add: string[] = [];
         let new_pv_list: string[] = this.turn2list<T>(new_pv);
         list2add = this.new_pvs_list(new_pv_list);
@@ -84,14 +82,13 @@ class EpicsCon {
 
     static get_pv_data<M>(): Dict<EpicsData<M>> {
         let pvData: Dict<EpicsData<M>> = this.epics.pvData;
-        console.log(pvData);
         return pvData;
     }
 }
 
-class EpicsBase<T extends string> {
+class EpicsBase<T extends string|string[]> {
     private update_interval: number;
-    private timer: null | NodeJS.Timer;
+    private timer: any;
     private pv_name: T;
     private thresholds: Thresholds;
 

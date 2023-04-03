@@ -80,7 +80,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     if(pvInfo != undefined){
       const validValue: boolean = this.state!=null && pvInfo.value != null;
       if(validValue){
-        led_value = this.epics.get_threshold(pvInfo.value);
+        led_value = this.epics.get_threshold(Number(pvInfo.value));
         if(modifyValue!=undefined){
           led_value = modifyValue<string>(
             led_value, pv_name);
