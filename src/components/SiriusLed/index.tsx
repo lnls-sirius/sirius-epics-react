@@ -1,95 +1,89 @@
 import React from "react";
+import EpicsBase from "../epics";
 import SiriusTooltip from "../SiriusTooltip";
-import Epics from "../data-access/EPICS/Epics";
-import { StateNum, LedPv, EpicsData, DictEpicsData } from "../assets/interfaces";
+import { State, LedPv, EpicsData, Dict } from "../../assets/interfaces";
+import { default_colors, led_shape } from "../../assets/themes";
 import * as S from './styled';
-
 
 /**
  * Show a default Led display for EPICS
  * @param props
  *   - shape - Led shape
- *   - alert - Alert limit value
- *   - alarm - Alarm limit value
- * @param refreshInterval - Update interval in milliseconds
- * @param epics - Epics Object
- * @param timer - Timer object
- * @param pv_name - Name of the PV connected
  * @param value - Current state of the led
  */
-class SiriusLed extends React.Component<LedPv, StateNum>{
-  private refreshInterval: number= 100;
-  private epics: Epics;
-  private timer: null|NodeJS.Timer;
-  private pv_name: string;
+class SiriusLed extends React.Component<LedPv, State<string>>{
+  private epics: EpicsBase<string>;
+  private color_list: Dict<string>;
 
   constructor(props: LedPv) {
     super(props);
-
     this.updateLed = this.updateLed.bind(this);
 
     this.state = {
-      value: 3
+      value: 'nc'
     };
-    if(props.updateInterval!=undefined){
-      this.refreshInterval = props.updateInterval;
-    }
-    this.pv_name = this.savePvName();
-    this.epics = this.handleEpics();
-    this.timer = setInterval(
-      this.updateLed, this.refreshInterval);
+
+    this.color_list = this.initialize_led_style(props.color);
+    this.epics = this.initialize_epics_base(props);
     this.updateLed();
-    this.timer = null;
   }
 
   /**
    * Save PV name with update
    */
   componentDidUpdate(): void {
-    this.pv_name = this.savePvName();
+    const { pv_name } = this.props;
+    this.epics.set_pvname(pv_name);
   }
 
   /**
-   * Connect the pv to EPICS
-   * @returns epics
+   * Unmount Component
    */
-  handleEpics(): Epics {
-    if(this.props.pv_name.length != 0){
-      return new Epics([this.pv_name]);
-    }
-    return new Epics(["FakePV"]);
+  componentWillUnmount(): void {
+    this.epics.destroy();
   }
 
-  /**
-   * Save the name of the PV in a string format
-   * @returns name
-   */
-  savePvName(): string {
-    if(Array.isArray(this.props.pv_name)){
-      return this.props.pv_name[0];
-    }
-    return this.props.pv_name;
+  initialize_epics_base(props: LedPv): EpicsBase<string> {
+    const { pv_name, threshold, update_interval } = props;
+
+    this.epics = new EpicsBase(pv_name);
+    this.epics.initialize(pv_name, threshold, update_interval);
+    this.epics.start_timer(this.updateLed);
+    return this.epics;
   }
 
+  initialize_led_style(color: Dict<string>) {
+    if(color !== undefined) {
+      color = this.handle_default_color(color);
+      return color;
+    }
+    return default_colors.led;
+  }
+
+  handle_default_color(color: Dict<string>): Dict<string> {
+    if(!('nc' in color)){
+      color["nc"] = default_colors.led["nc"];
+    }
+    if(!('normal' in color)){
+      color["normal"] = default_colors.led["normal"];
+    }
+    return color;
+  }
   /**
    * Update led color with measured EPICS value
    */
   updateLed(): void {
-    let pvData: DictEpicsData = this.epics.pvData;
-    const pvInfo: EpicsData = pvData[this.pv_name];
-    let led_value: number = 3;
+    const { pv_name, modifyValue } = this.props;
+    let led_value: string = "nc";
+    let pvData: Dict<EpicsData<number>> = this.epics.get_pv_data<number>();
+    const pvInfo: EpicsData<number> = pvData[pv_name];
     if(pvInfo != undefined){
-      if(this.state!=null &&
-          pvInfo.value != null &&
-            typeof(pvInfo.value) == "number"){
-        if(pvInfo.datatype == "DBR_DOUBLE"){
-          led_value = this.alert_alarm(pvInfo.value);
-        }else{
-          led_value = pvInfo.value;
-        }
-        if(this.props.modifyValue!=undefined){
-          led_value = this.props.modifyValue(
-            led_value, this.pv_name);
+      const validValue: boolean = this.state!=null && pvInfo.value != null;
+      if(validValue){
+        led_value = this.epics.get_threshold(Number(pvInfo.value));
+        if(modifyValue!=undefined){
+          led_value = modifyValue<string>(
+            led_value, pv_name);
         }
       };
     }
@@ -99,41 +93,14 @@ class SiriusLed extends React.Component<LedPv, StateNum>{
     });
   }
 
-  /**
-   * Verify for alert or alarm state
-   */
-  alert_alarm(value: number): number {
-    if(this.props.alarm!=undefined){
-      if(value >= this.props.alarm){
-        return 2;
-      }
-    }
-    if(this.props.alert != undefined){
-      if(value >= this.props.alert){
-        return 1;
-      }
-    }
-    return 0;
-  }
-
-  /**
-   * Unmount Component
-   */
-  componentWillUnmount(): void {
-    if(this.timer!=null){
-      clearInterval(this.timer);
-      this.epics.disconnect();
-    }
-  }
-
   render(): React.ReactNode {
-    const {shape} = this.props;
+    const {shape, pv_name} = this.props;
 
     return(
-      <SiriusTooltip text={this.pv_name}>
+      <SiriusTooltip text={pv_name}>
         <S.LedWrapper
-          state={this.state.value}
-          shape={shape}/>
+          shape={led_shape[shape]}
+          color={this.color_list[this.state.value]}/>
       </SiriusTooltip>
     );
   }

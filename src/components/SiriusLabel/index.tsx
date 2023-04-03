@@ -1,93 +1,78 @@
 import React from "react";
+import EpicsBase from "../epics";
 import SiriusTooltip from "../SiriusTooltip";
-import Epics from "../data-access/EPICS/Epics";
-import { DictEpicsData, EpicsData, LabelPv, StateStr } from "../assets/interfaces";
+import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
 
 /**
  * Show a default Label display for EPICS
  * @param props
  *   - state - Initial state of the PV
- * @param refreshInterval - Update interval in milliseconds
- * @param epics - Epics Object
- * @param timer - Timer object
- * @param pv_name - Name of the PV connected
  */
-class SiriusLabel extends React.Component<LabelPv, StateStr>{
-  private refreshInterval: number = 100;
-  private epics: Epics;
-  private timer: null|NodeJS.Timer;
-  private pv_name: string;
+class SiriusLabel extends React.Component<LabelPv, State<string>>{
+  private epics: EpicsBase<string>;
+  private precision: number|undefined;
 
   constructor(props: LabelPv) {
     super(props);
-
     this.updateLabel = this.updateLabel.bind(this);
 
     this.state = {
-      value: props.state
+      value: 'NC'
     };
 
-    if(props.updateInterval!=undefined){
-      this.refreshInterval = props.updateInterval;
-    }
-    this.pv_name = this.savePvName();
-    this.epics = this.handleEpics();
+    this.epics = this.initialize_epics_base(props);
+    this.precision = props.precision;
     this.updateLabel();
-    this.timer = setInterval(
-      this.updateLabel, this.refreshInterval);
   }
 
   /**
    * Save PV name with update
    */
   componentDidUpdate(): void {
-    this.pv_name = this.savePvName();
+    const { pv_name } = this.props;
+    this.epics.set_pvname(pv_name);
   }
 
   /**
-   * Connect the pv to EPICS
-   * @returns epics
+   * Unmount Component
    */
-  handleEpics(): Epics {
-    if(this.props.pv_name.length != 0){
-      return new Epics([this.pv_name]);
-    }
-    return new Epics(["FakePV"]);
+  componentWillUnmount(): void {
+    this.epics.destroy();
   }
 
-  /**
-   * Save the name of the PV in a string format
-   * @returns name
-   */
-  savePvName(): string {
-    if(Array.isArray(this.props.pv_name)){
-      return this.props.pv_name[0];
-    }
-    return this.props.pv_name;
+  initialize_epics_base(props: LabelPv): EpicsBase<string> {
+    const { pv_name, threshold, update_interval } = props;
+
+    this.epics = new EpicsBase(pv_name);
+    this.epics.initialize(pv_name, threshold, update_interval);
+    this.epics.start_timer(this.updateLabel);
+    return this.epics;
   }
 
   /**
    * Update label with measured EPICS value
    */
   updateLabel(): void {
-    const pvData: DictEpicsData = this.epics.pvData;
-    const pvInfo: EpicsData = pvData[this.pv_name];
-    let label_value: string = this.props.state;
+    const { pv_name, modifyValue } = this.props;
+    const pvData: Dict<EpicsData<string>> = this.epics.get_pv_data<string>();
+    const pvInfo: EpicsData<string> = pvData[pv_name];
+    let label_value: string = 'NC';
     if(pvInfo != undefined){
-      if(this.state!=null &&
-          pvInfo.value != null){
-            if(pvInfo.datatype == "DBR_DOUBLE" &&
-              typeof(pvInfo.value) == "number"){
-                label_value = pvInfo.value.toFixed(3);
-            }else{
-              label_value = pvInfo.value.toString();
-            }
-            if(this.props.modifyValue!=undefined){
-              label_value = this.props.modifyValue(
-                label_value, this.pv_name);
-            }
-      }else{
-        label_value = "NC";
+      if(pvInfo.value != undefined){
+        const pvInfoVal: string|number = pvInfo.value;
+        if(this.state!=null && pvInfoVal != null){
+          const isNumber = pvInfo.datatype == "DBR_DOUBLE" &&
+            typeof(pvInfoVal) == "number";
+          if(isNumber && this.precision!==undefined){
+            label_value = Number(pvInfoVal).toFixed(this.precision);
+          }else{
+            label_value = pvInfoVal.toString();
+          }
+          if(modifyValue!=undefined){
+            label_value = modifyValue<string>(
+              label_value, pv_name);
+          }
+        }
       }
     }
 
@@ -101,27 +86,19 @@ class SiriusLabel extends React.Component<LabelPv, StateStr>{
    * @returns egu
    */
   showEgu(): string {
-    if (this.props.egu!=undefined){
-      return this.props.egu;
+    const { egu } = this.props;
+    if (egu!=undefined){
+      return egu;
     }
     return "";
   }
 
-  /**
-   * Unmount Component
-   */
-  componentWillUnmount(): void {
-    if(this.timer!=null){
-      clearInterval(this.timer);
-      this.epics.disconnect();
-    }
-  }
-
   render(): React.ReactNode {
+    const { pv_name } = this.props;
 
     return(
-      <SiriusTooltip text={this.pv_name}>
-        {this.state.value + this.showEgu()}
+      <SiriusTooltip text={pv_name}>
+        {this.state.value} {this.showEgu()}
       </SiriusTooltip>
     );
   }
