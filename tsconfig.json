@@ -22,6 +22,7 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "noImplicitAny": false
+      "noImplicitAny": false,
+      "allowJs": true
     }
 }

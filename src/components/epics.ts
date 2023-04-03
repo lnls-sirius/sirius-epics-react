@@ -1,4 +1,4 @@
-import Epics from "../data_access/Epics";
+import Epics from "../access_data/Epics";
 import { Dict, EpicsData } from "../assets/interfaces";
 
 class Thresholds {
