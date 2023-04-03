@@ -46,11 +46,51 @@ class Thresholds {
         return final_state
     }
 }
+class EpicsCon {
+    private static epics: Epics = new Epics([]);
+    private static pv_name: string[] = [];
 
-// Should accept 1 or + PVs with 1 or + values
-class EpicsBase<T> {
+    static turn2list<T extends string>(new_pv: T): string[]{
+        if(Array.isArray(new_pv)){
+            return new_pv;
+        }
+        return [new_pv];
+    }
+
+    static new_pvs_list(pv_list: string[]): string[]{
+        let pvs2add: string[] = [];
+        pv_list.map((pvname: string) => {
+            if(!(pvname in this.pv_name)){
+                pvs2add.push(pvname);
+            }
+        })
+        return pvs2add;
+    }
+
+    static create_epics(){
+        this.epics.disconnect();
+        console.log(this.pv_name);
+        console.log(this.epics);
+        return new Epics(this.pv_name);
+    }
+
+    static add_new_pv<T extends string>(new_pv: T){
+        let list2add: string[] = [];
+        let new_pv_list: string[] = this.turn2list<T>(new_pv);
+        list2add = this.new_pvs_list(new_pv_list);
+        this.pv_name = this.pv_name.concat(list2add);
+        this.epics = this.create_epics();
+    }
+
+    static get_pv_data<M>(): Dict<EpicsData<M>> {
+        let pvData: Dict<EpicsData<M>> = this.epics.pvData;
+        console.log(pvData);
+        return pvData;
+    }
+}
+
+class EpicsBase<T extends string> {
     private update_interval: number;
-    private epics: Epics;
     private timer: null | NodeJS.Timer;
     private pv_name: T;
     private thresholds: Thresholds;
@@ -58,14 +98,14 @@ class EpicsBase<T> {
     constructor(pvname: T){
         this.update_interval = 100;
         this.pv_name = pvname;
-        this.epics = this.create_epics();
+        this.subscribe2epics_con();
         this.timer = null;
         this.thresholds = new Thresholds();
     }
 
     initialize(pv_name: T, threshold: undefined|Dict<number>, update_interval: undefined|number): void {
         this.set_pvname(pv_name);
-        this.create_epics();
+        this.subscribe2epics_con();
 
         if(threshold !== undefined) {
             this.thresholds.set_thresholds(threshold);
@@ -81,7 +121,7 @@ class EpicsBase<T> {
     }
 
     get_pv_data<M>(): Dict<EpicsData<M>> {
-        let pvData: Dict<EpicsData<M>> = this.epics.pvData;
+        let pvData: Dict<EpicsData<M>> = EpicsCon.get_pv_data();
         return pvData;
     }
 
@@ -97,17 +137,14 @@ class EpicsBase<T> {
         this.update_interval = milliseconds;
     }
 
-    create_epics(): Epics {
-        if(Array.isArray(this.pv_name)){
-            return new Epics(this.pv_name);
-        }
-        return new Epics([this.pv_name]);
+    subscribe2epics_con(){
+        EpicsCon.add_new_pv<T>(this.pv_name);
     }
 
     destroy(): void {
         if(this.timer!=null){
             clearInterval(this.timer);
-            this.epics.disconnect();
+            // this.epics.disconnect();
         }
     }
 }
