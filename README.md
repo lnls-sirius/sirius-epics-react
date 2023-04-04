@@ -64,9 +64,18 @@ Example:
 >The Sirius Label is a component to display the value of a PV, be it a string or number.
 
 >Props:
-- precision (optional): Precision shown in the PV value, if it is a number.
+- precision (Optional): Precision shown in the PV value, if it is a number.
 
 >Example:
 ```
   <SiriusLabel pv_name={'A:RANDOM:PV'} precision={3} egu='m'/>
+```
+
+## Sirius Invisible
+
+>The Sirius Invisible is an invisible component used for monitoring a list of PVs.
+
+>Example:
+```
+  <SiriusInvisible pv_name={["A:RANDOM:PV, "ANOTHER:RANDOM:PV"]} modifyValue={modifierFunction}/>
 ```
