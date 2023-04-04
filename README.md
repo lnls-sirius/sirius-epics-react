@@ -139,5 +139,9 @@ Example:
 
 >Example:
 ```
-  <SiriusInvisible pv_name={["A:RANDOM:PV, "ANOTHER:RANDOM:PV"]} modifyValue={modifierFunction}/>
+  <SiriusChart
+    pv_name={['RANDOM:PV1', 'RANDOM:PV2', 'RANDOM:PV3']}
+    label={['PV 1', 'PV 2', 'PV 3']}
+    threshold={threshold}
+    modifyValue={valueModifierHandler}/>
 ```
