@@ -179,16 +179,21 @@ class SiriusChart extends Component<ChartPv>{
    * ]
    */
   async buildChart(): Promise<any[]> {
-    const { pv_name } = this.props;
+    const { pv_name, modifyValue } = this.props;
     let datasetList: number[] = [];
     let colorList: string[] = [];
     const pvData: any = this.epics.get_pv_data();
     pv_name.map(async (pvname: string, idx_data: number)=>{
       const pvInfo: EpicsData<string> = pvData[pvname];
       if('value' in pvInfo){
-        const threshold_type = this.epics.get_threshold(Number(pvInfo.value));
         if(typeof(pvInfo.value) == "number"){
           datasetList[idx_data] = pvInfo.value;
+          if(modifyValue != undefined){
+            datasetList[idx_data] = modifyValue(
+              pvInfo.value, pv_name);
+          }
+
+          const threshold_type = this.epics.get_threshold(datasetList[idx_data]);
           colorList[idx_data] = this.color_list[threshold_type];
         }
       }
@@ -208,15 +213,16 @@ class SiriusChart extends Component<ChartPv>{
    * @returns new Chart object
    */
   createChart(reference: HTMLCanvasElement): Chart {
+    const { pv_name, modifyOptions } = this.props;
 
     const config: any = {
       type: "bar",
       options: chartOptions
     }
 
-    if(this.props.modifyValue != undefined){
-      config.options = this.props.modifyValue(
-        config.options, this.props.pv_name);
+    if(modifyOptions != undefined){
+      config.options = modifyOptions(
+        config.options, pv_name);
     }
 
     return new Chart(
