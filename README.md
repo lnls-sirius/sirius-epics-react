@@ -16,6 +16,26 @@ Example:
   import { SiriusLabel, SiriusInvisible } from "sirius-epics-react";
 ```
 
+## General PV properties
+
+>Props:
+- pv_name: A single pv (SiriusLed and SiriusLabel) or list of pv names (SiriusInvisible and SiriusChart) that will be monitored with the component.
+- egu (Optional): The engineering unit of the pv.
+- update_interval (Optional): The interval, in milliseconds, that the component will update its value.
+- threshold (Optional): Dictionary with keys and values that will be used as thesholds triggers.
+  ```
+    const threshold = {
+      'alert': 0.1,
+      'alarm': 0.14
+    }
+  ```
+- modifyValue (Optional): Function that will be called every time the component is updated and allow the value of the PV to be changed.
+  ```
+    function handleMod(value: any, pvname?: string | undefined): any {
+        return value+0.01
+    }
+  ```
+
 ## Sirius Tooltip
 
 >The Sirius Tooltip is wrapped around the SiriusLabel and SiriusLed components so that when you click with the scroll button, the name of the PV being monitored in the component will appear.
