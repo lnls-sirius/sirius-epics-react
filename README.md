@@ -41,7 +41,7 @@ Example:
   * 'square': Square Led
   * 'squ_circ': Square Led with round corners
 
-- color: Customize the color for each threshold value.
+- color (Optional): Customize the color for each threshold value.
 
   * The colors of each threshold can be determined by using the color parameter, for it to work the key of the color has to be the same as the key of the desired threshold it represents.
 
@@ -57,4 +57,16 @@ Example:
 >Example:
 ```
   <SiriusLed pv_name="A:RANDOM:PV" shape={'circle'} threshold={random_threshold}/>
+```
+
+## Sirius Label
+
+>The Sirius Label is a component to display the value of a PV, be it a string or number.
+
+>Props:
+- precision (optional): Precision shown in the PV value, if it is a number.
+
+>Example:
+```
+  <SiriusLabel pv_name={'A:RANDOM:PV'} precision={3} egu='m'/>
 ```
