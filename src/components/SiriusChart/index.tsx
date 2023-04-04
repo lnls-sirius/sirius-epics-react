@@ -72,7 +72,7 @@ class SiriusChart extends Component<ChartPv>{
     return default_colors.chart;
   }
 
-  initialize_label_list(labels: string[]): string[] {
+  initialize_label_list(labels: string[]|undefined): string[] {
     const { pv_name } = this.props;
     let labelList: string[] = [];
     pv_name.map((pv_name: string, idx_data: number)=>{
