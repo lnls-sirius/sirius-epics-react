@@ -178,7 +178,10 @@ class EpicsBase<T extends string|string[]> {
     }
 
     set_pvname(pvname: T): void {
-        this.pv_name = pvname;
+        if(this.pv_name != pvname){ 
+            this.pv_name = pvname;
+            this.subscribe2epics_con();
+        }
     }
 
     set_update_interval(milliseconds: number): void {

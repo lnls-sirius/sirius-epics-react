@@ -48,6 +48,7 @@ class SiriusChart extends Component<ChartPv>{
   componentDidUpdate(): void {
     const { pv_name } = this.props;
     this.epics.set_pvname(pv_name);
+    this.labelList = this.initialize_label_list(pv_name);
   }
 
   componentWillUnmount(): void {
@@ -106,7 +107,7 @@ class SiriusChart extends Component<ChartPv>{
    */
   create_threshold_line(datasetList: any[]): any[] {
     const { threshold } = this.props;
-    const line_all_element: boolean = this.threshold_lines.length != datasetList[0].data.length;
+    const line_all_element: boolean = this.threshold_lines.length != this.labelList.length;
     let dataset_threshold: any[] = this.threshold_lines;
     if(threshold && line_all_element){
       Object.entries(threshold).map(([label, value]: [string, number]) => {
@@ -172,17 +173,15 @@ class SiriusChart extends Component<ChartPv>{
     const pvData: any = this.epics.get_pv_data();
     pv_name.map(async (pvname: string, idx_data: number)=>{
       const pvInfo: EpicsData<string> = pvData[pvname];
-      if('value' in pvInfo){
-        if(typeof(pvInfo.value) == "number"){
-          datasetList[idx_data] = pvInfo.value;
-          if(modifyValue != undefined){
-            datasetList[idx_data] = modifyValue(
-              pvInfo.value, pv_name);
-          }
-
-          const threshold_type = this.epics.get_threshold(datasetList[idx_data]);
-          colorList[idx_data] = this.color_list[threshold_type];
+      if(typeof(pvInfo.value) == "number"){
+        datasetList[idx_data] = pvInfo.value;
+        if(modifyValue != undefined){
+          datasetList[idx_data] = modifyValue(
+            pvInfo.value, pv_name);
         }
+
+        const threshold_type = this.epics.get_threshold(datasetList[idx_data]);
+        colorList[idx_data] = this.color_list[threshold_type];
       }
     })
     let dataset: any[] = [{
@@ -190,7 +189,6 @@ class SiriusChart extends Component<ChartPv>{
       backgroundColor: colorList,
       borderColor: colorList
     }]
-
     return dataset;
   }
 
