@@ -46,9 +46,9 @@ class SiriusChart extends Component<ChartPv>{
    * Save PV name with update
    */
   componentDidUpdate(): void {
-    const { pv_name } = this.props;
+    const { pv_name, label } = this.props;
     this.epics.set_pvname(pv_name);
-    this.labelList = this.initialize_label_list(pv_name);
+    this.labelList = this.initialize_label_list(label);
   }
 
   componentWillUnmount(): void {
