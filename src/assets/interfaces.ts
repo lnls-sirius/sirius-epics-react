@@ -19,10 +19,10 @@ interface PvListInterface {
 
 interface ChartPv
     extends PvInterface<string[]> {
-        color: Dict<string>,
-        label: string[],
-        configOptions: (
-            options: any, pv_name: string|string[]) => any
+        color?: Dict<string>,
+        label?: string[],
+        modifyOptions?: (
+            options: any, pv_name: string[]) => any
 }
 
 interface PvInterface<T>{
@@ -30,7 +30,7 @@ interface PvInterface<T>{
     egu?: string,
     update_interval?: number,
     threshold?: Dict<number>,
-    modifyValue?: <M>(value: M, pvname?: string) => M;
+    modifyValue?: <M>(value: M, pvname?: T) => M;
 }
 
 interface EpicsData<T> {
@@ -47,7 +47,7 @@ interface LabelPv
 
 interface LedStatus<T> {
     shape: string,
-    color: T
+    color?: T
 }
 
 interface LedPv

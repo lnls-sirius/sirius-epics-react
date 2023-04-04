@@ -4,9 +4,7 @@ import SiriusTooltip from "../SiriusTooltip";
 import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
 
 /**
- * Show a default Label display for EPICS
- * @param props
- *   - state - Initial state of the PV
+ * Default Label component for monitoring a PV from the EPICS control system.
  */
 class SiriusLabel extends React.Component<LabelPv, State<string>>{
   private epics: EpicsBase<string>;
@@ -33,9 +31,6 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
     this.epics.set_pvname(pv_name);
   }
 
-  /**
-   * Unmount Component
-   */
   componentWillUnmount(): void {
     this.epics.destroy();
   }
@@ -83,7 +78,6 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
 
   /**
    * Show unit of the PV being measured
-   * @returns egu
    */
   showEgu(): string {
     const { egu } = this.props;

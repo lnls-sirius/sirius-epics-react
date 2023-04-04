@@ -6,10 +6,7 @@ import { default_colors, led_shape } from "../../assets/themes";
 import * as S from './styled';
 
 /**
- * Show a default Led display for EPICS
- * @param props
- *   - shape - Led shape
- * @param value - Current state of the led
+ * Default Led component for monitoring a PV from the EPICS control system.
  */
 class SiriusLed extends React.Component<LedPv, State<string>>{
   private epics: EpicsBase<string>;
@@ -36,9 +33,6 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     this.epics.set_pvname(pv_name);
   }
 
-  /**
-   * Unmount Component
-   */
   componentWillUnmount(): void {
     this.epics.destroy();
   }
@@ -52,7 +46,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     return this.epics;
   }
 
-  initialize_led_style(color: Dict<string>) {
+  initialize_led_style(color: Dict<string>|undefined) {
     if(color !== undefined) {
       color = this.handle_default_color(color);
       return color;
@@ -60,6 +54,10 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     return default_colors.led;
   }
 
+  /**
+   * Add normal and nc (Not connected) colors to the color dictionary
+   * if they are not declared.
+   */
   handle_default_color(color: Dict<string>): Dict<string> {
     if(!('nc' in color)){
       color["nc"] = default_colors.led["nc"];
@@ -69,6 +67,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     }
     return color;
   }
+
   /**
    * Update led color with measured EPICS value
    */

@@ -7,14 +7,14 @@ import { chartOptions } from "./options";
 import * as S from './styled';
 
 /**
- * EPICS Chart that displays a list of PVs.
+ * Default Chart component for monitoring a list of PVs from the EPICS control system.
 */
 class SiriusChart extends Component<ChartPv>{
   private chartRef: RefChart;
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;
   private labelList: string[];
-  private threshold_lines: ChartDataSet[];
+  private threshold_lines: any[];
   public chart: null|Chart;
 
   constructor(props: ChartPv){
@@ -50,9 +50,6 @@ class SiriusChart extends Component<ChartPv>{
     this.epics.set_pvname(pv_name);
   }
 
-  /**
-   * Unmount Component
-   */
   componentWillUnmount(): void {
     this.epics.destroy();
   }
@@ -67,7 +64,7 @@ class SiriusChart extends Component<ChartPv>{
     return this.epics;
   }
 
-  initialize_bar_style(color: Dict<string>): Dict<string> {
+  initialize_bar_style(color: Dict<string>|undefined): Dict<string> {
     if(color !== undefined) {
       color = this.handle_default_color(color);
       return color;
@@ -100,56 +97,22 @@ class SiriusChart extends Component<ChartPv>{
     return color;
   }
 
-  /**
-   * Set new datasets and labels to the EPICS Chart.
-   * @param newData - List of Datasets to be shown in the chart.
-   * @param labels - List of labels to be shown in the chart.
-   */
-  updateDataset(newData: any[], labels: string[]): void {
-    if(this.chart){
-      this.chart.data.labels = labels;
-      this.chart.data.datasets = newData;
-      this.chart.update();
-    }
-  }
-
-  /**
-  * Capitalize string
-  *
-  * @param str - normal string
-  * @returns capitalized string
-  */
   capitalize(str: string): string {
     return str[0].toUpperCase()+str.slice(1)
   }
 
   /**
-   * Update the EPICS chart with more recent data received from the PVs.
+   * Create threshold lines and save them.
    */
-  async updateChart(): Promise<void> {
-    if(this.chart != null){
-      const datasetList: ChartDataSet[] = await this.buildChart();
-      let dataset: ChartDataSet[] = datasetList;
-      this.threshold_lines = this.create_threshold_line(dataset);
-      dataset = this.add_thresholds(dataset);
-      this.updateDataset(dataset, this.labelList);
-    }
-  }
-
-  /**
-   * Add limit axis lines to the chart.
-   * @param datasetList - Dataset to be added to the chart.
-   * @returns datasetList with limit axis lines.
-   */
-  create_threshold_line(datasetList: ChartDataSet[]): ChartDataSet[] {
+  create_threshold_line(datasetList: any[]): any[] {
     const { threshold } = this.props;
     const line_all_element: boolean = this.threshold_lines.length != datasetList[0].data.length;
-    let dataset_threshold: ChartDataSet[] = this.threshold_lines;
+    let dataset_threshold: any[] = this.threshold_lines;
     if(threshold && line_all_element){
       Object.entries(threshold).map(([label, value]: [string, number]) => {
         const color: string = this.color_list[label];
         if(datasetList[0].data.length > 0){
-          const datasetTemp: ChartDataSet = {
+          const datasetTemp: any = {
             data: (datasetList[0].data.map(()=>{return value})),
             type: 'line',
             yAxisID: 'y',
@@ -165,30 +128,59 @@ class SiriusChart extends Component<ChartPv>{
     return dataset_threshold;
   }
 
-  add_thresholds(datasetList: ChartDataSet[]): ChartDataSet[] {
-    this.threshold_lines.map((axis_data: ChartDataSet) => {
+  /**
+   * Add threshold lines to the chart.
+   */
+  add_thresholds(datasetList: any[]): any[] {
+    this.threshold_lines.map((axis_data: any) => {
       datasetList.push(axis_data);
     });
     return datasetList;
   }
 
   /**
-   * Build a dataset with the data read from EPICS.
-   * @returns [
-   *  Chart Datasets List, Chart Labels list
-   * ]
+   * Set new datasets and labels to the EPICS Chart.=
    */
-  async buildChart(): Promise<ChartDataSet[]> {
-    const { pv_name } = this.props;
+  updateDataset(newData: any[], labels: string[]): void {
+    if(this.chart){
+      this.chart.data.labels = labels;
+      this.chart.data.datasets = newData;
+      this.chart.update();
+    }
+  }
+
+  /**
+   * Update the EPICS chart with more recent data received from the PVs.
+   */
+  async updateChart(): Promise<void> {
+    if(this.chart != null){
+      const datasetList: any[] = await this.buildChart();
+      let dataset: any[] = datasetList;
+      this.threshold_lines = this.create_threshold_line(dataset);
+      dataset = this.add_thresholds(dataset);
+      this.updateDataset(dataset, this.labelList);
+    }
+  }
+
+  /**
+   * Build a dataset with the data read from EPICS.
+   */
+  async buildChart(): Promise<any[]> {
+    const { pv_name, modifyValue } = this.props;
     let datasetList: number[] = [];
     let colorList: string[] = [];
     const pvData: any = this.epics.get_pv_data();
     pv_name.map(async (pvname: string, idx_data: number)=>{
       const pvInfo: EpicsData<string> = pvData[pvname];
       if('value' in pvInfo){
-        const threshold_type = this.epics.get_threshold(Number(pvInfo.value));
         if(typeof(pvInfo.value) == "number"){
           datasetList[idx_data] = pvInfo.value;
+          if(modifyValue != undefined){
+            datasetList[idx_data] = modifyValue(
+              pvInfo.value, pv_name);
+          }
+
+          const threshold_type = this.epics.get_threshold(datasetList[idx_data]);
           colorList[idx_data] = this.color_list[threshold_type];
         }
       }
@@ -203,20 +195,19 @@ class SiriusChart extends Component<ChartPv>{
   }
 
   /**
-   * Create a Chart Object.
-   * @param reference - HTML canvas element.
-   * @returns new Chart object
+   * Create a and configure the chart.
    */
   createChart(reference: HTMLCanvasElement): Chart {
+    const { pv_name, modifyOptions } = this.props;
 
     const config: any = {
       type: "bar",
       options: chartOptions
     }
 
-    if(this.props.configOptions != undefined){
-      config.options = this.props.configOptions(
-        config.options, this.props.pv_name);
+    if(modifyOptions != undefined){
+      config.options = modifyOptions(
+        config.options, pv_name);
     }
 
     return new Chart(
