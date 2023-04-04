@@ -7,7 +7,7 @@ import { chartOptions } from "./options";
 import * as S from './styled';
 
 /**
- * EPICS Chart that displays a list of PVs.
+ * Default Chart component for monitoring a list of PVs from the EPICS control system.
 */
 class SiriusChart extends Component<ChartPv>{
   private chartRef: RefChart;
@@ -50,9 +50,6 @@ class SiriusChart extends Component<ChartPv>{
     this.epics.set_pvname(pv_name);
   }
 
-  /**
-   * Unmount Component
-   */
   componentWillUnmount(): void {
     this.epics.destroy();
   }
@@ -100,46 +97,12 @@ class SiriusChart extends Component<ChartPv>{
     return color;
   }
 
-  /**
-   * Set new datasets and labels to the EPICS Chart.
-   * @param newData - List of Datasets to be shown in the chart.
-   * @param labels - List of labels to be shown in the chart.
-   */
-  updateDataset(newData: any[], labels: string[]): void {
-    if(this.chart){
-      this.chart.data.labels = labels;
-      this.chart.data.datasets = newData;
-      this.chart.update();
-    }
-  }
-
-  /**
-  * Capitalize string
-  *
-  * @param str - normal string
-  * @returns capitalized string
-  */
   capitalize(str: string): string {
     return str[0].toUpperCase()+str.slice(1)
   }
 
   /**
-   * Update the EPICS chart with more recent data received from the PVs.
-   */
-  async updateChart(): Promise<void> {
-    if(this.chart != null){
-      const datasetList: any[] = await this.buildChart();
-      let dataset: any[] = datasetList;
-      this.threshold_lines = this.create_threshold_line(dataset);
-      dataset = this.add_thresholds(dataset);
-      this.updateDataset(dataset, this.labelList);
-    }
-  }
-
-  /**
-   * Add limit axis lines to the chart.
-   * @param datasetList - Dataset to be added to the chart.
-   * @returns datasetList with limit axis lines.
+   * Create threshold lines and save them.
    */
   create_threshold_line(datasetList: any[]): any[] {
     const { threshold } = this.props;
@@ -165,6 +128,9 @@ class SiriusChart extends Component<ChartPv>{
     return dataset_threshold;
   }
 
+  /**
+   * Add threshold lines to the chart.
+   */
   add_thresholds(datasetList: any[]): any[] {
     this.threshold_lines.map((axis_data: any) => {
       datasetList.push(axis_data);
@@ -173,10 +139,31 @@ class SiriusChart extends Component<ChartPv>{
   }
 
   /**
+   * Set new datasets and labels to the EPICS Chart.=
+   */
+  updateDataset(newData: any[], labels: string[]): void {
+    if(this.chart){
+      this.chart.data.labels = labels;
+      this.chart.data.datasets = newData;
+      this.chart.update();
+    }
+  }
+
+  /**
+   * Update the EPICS chart with more recent data received from the PVs.
+   */
+  async updateChart(): Promise<void> {
+    if(this.chart != null){
+      const datasetList: any[] = await this.buildChart();
+      let dataset: any[] = datasetList;
+      this.threshold_lines = this.create_threshold_line(dataset);
+      dataset = this.add_thresholds(dataset);
+      this.updateDataset(dataset, this.labelList);
+    }
+  }
+
+  /**
    * Build a dataset with the data read from EPICS.
-   * @returns [
-   *  Chart Datasets List, Chart Labels list
-   * ]
    */
   async buildChart(): Promise<any[]> {
     const { pv_name, modifyValue } = this.props;
@@ -208,9 +195,7 @@ class SiriusChart extends Component<ChartPv>{
   }
 
   /**
-   * Create a Chart Object.
-   * @param reference - HTML canvas element.
-   * @returns new Chart object
+   * Create a and configure the chart.
    */
   createChart(reference: HTMLCanvasElement): Chart {
     const { pv_name, modifyOptions } = this.props;

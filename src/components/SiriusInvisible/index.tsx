@@ -3,7 +3,7 @@ import EpicsBase from "../epics";
 import { PvInterface, Dict, EpicsData } from "../../assets/interfaces";
 
 /**
- * Monitor without display some EPICS PVs
+ * Default invisble component for monitoring a list of PVs from the EPICS control system.
  */
 class SiriusInvisible extends React.Component<PvInterface<string[]>>{
   private epics: EpicsBase<string[]>;
@@ -24,9 +24,6 @@ class SiriusInvisible extends React.Component<PvInterface<string[]>>{
     this.epics.set_pvname(pv_name);
   }
 
-  /**
-   * Unmount Component
-   */
   componentWillUnmount(): void {
     this.epics.destroy();
   }
@@ -40,7 +37,7 @@ class SiriusInvisible extends React.Component<PvInterface<string[]>>{
   }
 
   /**
-   * Update value with measured EPICS value
+   * Update values with measured EPICS value
    */
   updateLabel(): void {
     const { pv_name, modifyValue } = this.props;

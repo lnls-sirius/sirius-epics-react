@@ -12,6 +12,9 @@ const SiriusTooltip: React.FC<PvTooltipInterface> = (props) => {
   const [popEl, setPopEl] = useState<any>(null);
   const { styles, attributes } = usePopper(ancEl, popEl);
 
+  /**
+   * Open tooltip if clicked on the scroll button.
+   */
   const openTooltip = ( event: React.MouseEvent) => {
     if( event.button === 1 ) {
       setState(true);
