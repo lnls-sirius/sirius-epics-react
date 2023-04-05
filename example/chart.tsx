@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import SiriusChart from '../src/components/SiriusChart';
 
@@ -10,6 +10,7 @@ const Wrapper = styled.div`
 `
 
 const ChartDoc: React.FC = () => {
+    const [pvs, setPVs] = useState<string[]>(['4ewewe']);
     const threshold = {
         'alert': 0.1,
         'alarm': 0.14
@@ -21,8 +22,13 @@ const ChartDoc: React.FC = () => {
 
     return (
         <Wrapper>
+            <button onClick={()=> setPVs(
+                ["RAD:Berthold:TotalDoseRate:Dose",
+                "RAD:ELSE:TotalDoseRate:Dose"])}>
+                    ADD PVs
+            </button>
             <SiriusChart
-                pv_name={['RAD:Thermo1:Gamma', 'RAD:Thermo2:Gamma', 'RAD:Thermo3:Gamma', 'RAD:Thermo4:Gamma']}
+                pv_name={[...pvs]}
                 label={['Thermo1', 'Thermo2', 'Thermo3', 'Thermo4']}
                 threshold={threshold}
                 modifyValue={handleMod}/>
