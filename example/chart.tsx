@@ -9,8 +9,10 @@ const Wrapper = styled.div`
   justify-content: space-between;/
 `
 
+
 const ChartDoc: React.FC = () => {
     const [pvs, setPVs] = useState<string[]>(['4ewewe']);
+
     const threshold = {
         'alert': 0.1,
         'alarm': 0.14

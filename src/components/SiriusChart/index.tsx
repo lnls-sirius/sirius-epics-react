@@ -190,7 +190,6 @@ class SiriusChart extends Component<ChartPv>{
       backgroundColor: colorList,
       borderColor: colorList
     }]
-
     return dataset;
   }
 
