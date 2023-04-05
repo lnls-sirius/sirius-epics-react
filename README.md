@@ -32,9 +32,8 @@ Example:
 - modifyValue (Optional): Function that will be called every time the component is updated and allow the value of the PV to be changed.
   ```
     T: any
-    M: string | string[]
 
-    function handleMod<T>(value: T, pvname?: M | undefined): T {
+    function handleMod<T>(value: T, pvname: string): T {
         return value+0.01
     }
   ```

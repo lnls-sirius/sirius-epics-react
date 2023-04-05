@@ -177,7 +177,7 @@ class SiriusChart extends Component<ChartPv>{
         datasetList[idx_data] = pvInfo.value;
         if(modifyValue != undefined){
           datasetList[idx_data] = modifyValue(
-            pvInfo.value, pv_name);
+            pvInfo.value, pvname);
         }
       }else{
         datasetList[idx_data] = 0;

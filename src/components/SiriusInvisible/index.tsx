@@ -47,7 +47,7 @@ class SiriusInvisible extends React.Component<PvInterface<string[]>>{
       if(pvInfo != undefined && modifyValue!=undefined){
           if(pvInfo.value){
             modifyValue<EpicsData<string>>(
-              pvInfo, [pvname]);
+              pvInfo, pvname);
           }
       }
     })
