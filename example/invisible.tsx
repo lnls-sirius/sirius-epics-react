@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 const InvisibleDoc: React.FC = () => {
     const [values, setValues] = useState({});
 
-    function valueList<EpicsData>(value: EpicsData, pvname?: string): EpicsData {
+    function valueList<EpicsData>(value: EpicsData, pvname: string): EpicsData {
         if(pvname !== undefined){
             setValues(prev => ({...prev, [pvname]: value.value}));
         }

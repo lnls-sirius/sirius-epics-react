@@ -30,7 +30,7 @@ interface PvInterface<T>{
     egu?: string,
     update_interval?: number,
     threshold?: Dict<number>,
-    modifyValue?: <M>(value: M, pvname?: T) => M;
+    modifyValue?: <M>(value: M, pvname: string) => M;
 }
 
 interface EpicsData<T> {

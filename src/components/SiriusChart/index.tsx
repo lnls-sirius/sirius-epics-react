@@ -177,12 +177,13 @@ class SiriusChart extends Component<ChartPv>{
         datasetList[idx_data] = pvInfo.value;
         if(modifyValue != undefined){
           datasetList[idx_data] = modifyValue(
-            pvInfo.value, pv_name);
+            pvInfo.value, pvname);
         }
-
-        const threshold_type = this.epics.get_threshold(datasetList[idx_data]);
-        colorList[idx_data] = this.color_list[threshold_type];
+      }else{
+        datasetList[idx_data] = 0;
       }
+      const threshold_type = this.epics.get_threshold(datasetList[idx_data]);
+      colorList[idx_data] = this.color_list[threshold_type];
     })
     let dataset: any[] = [{
       data: datasetList,

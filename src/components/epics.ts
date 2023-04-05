@@ -177,8 +177,12 @@ class EpicsBase<T extends string|string[]> {
         return this.thresholds.get_biggest_threshold(value);
     }
 
+    equal_check(pvname: T): boolean {
+        return JSON.stringify(this.pv_name) != JSON.stringify(pvname);
+    }
+
     set_pvname(pvname: T): void {
-        if(this.pv_name != pvname){ 
+        if(this.equal_check(pvname)){
             this.pv_name = pvname;
             this.subscribe2epics_con();
         }

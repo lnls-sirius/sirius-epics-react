@@ -18,8 +18,8 @@ const ChartDoc: React.FC = () => {
         'alarm': 0.14
     }
 
-    function handleMod(value: any, pvname?: string[] | undefined): any {
-        return value+0.01
+    function handleMod(value: any, pvname: string[] | undefined): any {
+        return value+10
     }
 
     return (
@@ -31,6 +31,7 @@ const ChartDoc: React.FC = () => {
             </button>
             <SiriusChart
                 pv_name={[...pvs]}
+                label={['Thermo1', 'Thermo2', 'Thermo3', 'Thermo4']}
                 threshold={threshold}
                 modifyValue={handleMod}/>
         </Wrapper>
