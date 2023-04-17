@@ -1,9 +1,6 @@
 name: Epics-React library CI
 
 on:
-  push:
-    branches: main
-
   pull_request:
     branches: main
 
