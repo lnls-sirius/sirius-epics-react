@@ -9,6 +9,7 @@ import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
 class SiriusLabel extends React.Component<LabelPv, State<string>>{
   private epics: EpicsBase<string>;
   private precision: number|undefined;
+  private hasMounted: boolean;
 
   constructor(props: LabelPv) {
     super(props);
@@ -17,10 +18,14 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
     this.state = {
       value: 'NC'
     };
-
+    this.hasMounted = false;
     this.epics = this.initialize_epics_base(props);
     this.precision = props.precision;
     this.updateLabel();
+  }
+
+  componentDidMount(): void {
+    this.hasMounted = true;
   }
 
   /**
@@ -71,9 +76,11 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
       }
     }
 
-    this.setState({
-      value: label_value
-    });
+    if(this.hasMounted){
+      this.setState({
+        value: label_value
+      });
+    }
   }
 
   /**

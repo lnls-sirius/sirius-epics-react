@@ -2,6 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import SiriusTooltip from '../components/SiriusTooltip';
+import SiriusLed from '../components/SiriusLed';
 
 describe('Sirius Tooltip', () => {
   it("Component renders", async () => {
@@ -30,5 +31,21 @@ describe('Sirius Tooltip', () => {
 
     fireEvent.click(screen.getByText(/Element/i), {button: 1});
     expect(screen.getByText(hover_txt)).toBeInTheDocument()
+  })
+})
+
+describe('Sirius Led', () => {
+  it("Component renders", async () => {
+    await act(async () => {
+      render(
+        <SiriusLed
+          pv_name="A:RANDOM:PV"
+          shape={'circle'}
+          threshold={{}}/>
+      );
+    });
+
+    const element = screen.getByTestId("sirius-led");
+    expect(element).toBeInTheDocument();
   })
 })

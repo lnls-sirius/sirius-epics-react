@@ -11,6 +11,7 @@ import * as S from './styled';
 class SiriusLed extends React.Component<LedPv, State<string>>{
   private epics: EpicsBase<string>;
   private color_list: Dict<string>;
+  private hasMounted: boolean;
 
   constructor(props: LedPv) {
     super(props);
@@ -19,10 +20,14 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     this.state = {
       value: 'nc'
     };
-
+    this.hasMounted = false;
     this.color_list = this.initialize_led_style(props.color);
     this.epics = this.initialize_epics_base(props);
     this.updateLed();
+  }
+
+  componentDidMount(): void {
+    this.hasMounted = true;
   }
 
   /**
@@ -87,9 +92,11 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
       };
     }
 
-    this.setState({
-      value: led_value
-    });
+    if(this.hasMounted){
+      this.setState({
+        value: led_value
+      });
+    }
   }
 
   render(): React.ReactNode {
@@ -99,7 +106,8 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
       <SiriusTooltip text={pv_name}>
         <S.LedWrapper
           shape={led_shape[shape]}
-          color={this.color_list[this.state.value]}/>
+          color={this.color_list[this.state.value]}
+          data-testid="sirius-led"/>
       </SiriusTooltip>
     );
   }
