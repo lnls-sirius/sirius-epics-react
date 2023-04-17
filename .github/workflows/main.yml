@@ -1,4 +1,4 @@
-name: Epics-React library CI
+name: Epics-React library CI/CD
 
 on:
   push:
@@ -39,8 +39,8 @@ jobs:
       - run: yarn install
       - run: yarn run build
       - run: |
-          echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
-          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+          echo lnls-sirius:https://npm.pkg.github.com/lnls-sirius/ > ./.npmrc
+          echo '//npm.pkg.github.com/lnls-sirius/:_authToken=${NPM_TOKEN}' >> ./.npmrc
       - run: npm publish
         env:
           NPM_TOKEN: ${{ secrets.EPICS_REACT }}
