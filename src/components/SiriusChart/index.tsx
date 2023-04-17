@@ -219,6 +219,7 @@ class SiriusChart extends Component<ChartPv>{
     return (
       <S.ChartWrapper>
         <S.Chart
+          data-testid="sirius-chart"
           id="canva"
           ref={this.chartRef}/>
       </S.ChartWrapper>

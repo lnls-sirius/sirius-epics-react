@@ -54,7 +54,7 @@ class SiriusInvisible extends React.Component<PvInterface<string[]>>{
   }
 
   render(): React.ReactNode {
-    return <div/>;
+    return <div data-testid="sirius-invisible"/>;
   }
 }
 

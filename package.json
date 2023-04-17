@@ -55,6 +55,7 @@
   "dependencies": {
     "@popperjs/core": "^2.11.7",
     "babel-jest": "^29.5.0",
+    "canvas": "^2.11.2",
     "chart.js": "^4.2.1",
     "chartjs-adapter-moment": "^1.0.1",
     "jest-environment-jsdom": "^29.5.0",

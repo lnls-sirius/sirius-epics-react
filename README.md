@@ -101,7 +101,7 @@ Example:
 
 >Example:
 ```
-  <SiriusInvisible pv_name={["A:RANDOM:PV, "ANOTHER:RANDOM:PV"]} modifyValue={modifierFunction}/>
+  <SiriusInvisible pv_name={["A:RANDOM:PV", "ANOTHER:RANDOM:PV"]} modifyValue={modifierFunction}/>
 ```
 
 ## Sirius Chart
