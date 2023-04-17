@@ -99,7 +99,9 @@ class SiriusLabel extends React.Component<LabelPv, State<string>>{
 
     return(
       <SiriusTooltip text={pv_name}>
-        {this.state.value} {this.showEgu()}
+        <div data-testid="sirius-label">
+          {this.state.value} {this.showEgu()}
+        </div>
       </SiriusTooltip>
     );
   }
