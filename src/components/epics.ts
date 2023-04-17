@@ -138,28 +138,28 @@ class EpicsCon {
  * fixed time intervals.
  */
 class EpicsBase<T extends string|string[]> {
-    private update_interval: number;
+    public update_interval: number;
+    public thresholds: Thresholds;
+    public pv_name: T;
     private timer: any;
-    private pv_name: T;
-    private thresholds: Thresholds;
 
     constructor(pvname: T){
         this.update_interval = 100;
         this.pv_name = pvname;
-        this.subscribe2epics_con();
+        this._subscribe2epics_con();
         this.timer = null;
         this.thresholds = new Thresholds();
     }
 
     initialize(pv_name: T, threshold: undefined|Dict<number>, update_interval: undefined|number): void {
         this.set_pvname(pv_name);
-        this.subscribe2epics_con();
+        this._subscribe2epics_con();
 
         if(threshold !== undefined) {
             this.thresholds.set_thresholds(threshold);
         }
         if(update_interval !=undefined){
-            this.set_update_interval(update_interval);
+            this._set_update_interval(update_interval);
         }
     }
 
@@ -177,34 +177,34 @@ class EpicsBase<T extends string|string[]> {
         return this.thresholds.get_biggest_threshold(value);
     }
 
-    equal_check(pvname: T): boolean {
-        return JSON.stringify(this.pv_name) != JSON.stringify(pvname);
-    }
-
     set_pvname(pvname: T): void {
-        if(this.equal_check(pvname)){
+        if(this._equal_check(pvname)){
             this.pv_name = pvname;
-            this.subscribe2epics_con();
+            this._subscribe2epics_con();
         }
-    }
-
-    set_update_interval(milliseconds: number): void {
-        this.update_interval = milliseconds;
-    }
-
-    subscribe2epics_con(){
-        EpicsCon.add_new_pv<T>(this.pv_name);
-    }
-
-    unsubscribe2epics_con(){
-        EpicsCon.remove_pv<T>(this.pv_name);
     }
 
     destroy(): void {
         if(this.timer!=null){
             clearInterval(this.timer);
-            this.unsubscribe2epics_con();
+            this._unsubscribe2epics_con();
         }
+    }
+
+    _equal_check(pvname: T): boolean {
+        return JSON.stringify(this.pv_name) != JSON.stringify(pvname);
+    }
+
+    _set_update_interval(milliseconds: number): void {
+        this.update_interval = milliseconds;
+    }
+
+    _subscribe2epics_con(){
+        EpicsCon.add_new_pv<T>(this.pv_name);
+    }
+
+    _unsubscribe2epics_con(){
+        EpicsCon.remove_pv<T>(this.pv_name);
     }
 }
 
