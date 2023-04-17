@@ -1,0 +1,28 @@
+name: Epics-React library CI
+
+on:
+  release:
+    types: [create]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install
+      - run: npm run build
+      - run: |
+          echo lnls-sirius:https://npm.pkg.github.com/ > build/.npmrc
+          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> build/.npmrc
+      - run: npm publish
+        working-directory: ./build
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}

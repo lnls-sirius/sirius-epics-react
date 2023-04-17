@@ -16,10 +16,10 @@ jobs:
         uses: actions/checkout@master
 
       - name: Install 🔧
-        run: yarn install
+        run: npm install
 
       - name: Test 🚨
-        run: yarn test
+        run: npm test
 
       - name: Build 🏗️
-        run: yarn run build
+        run: npm run build
