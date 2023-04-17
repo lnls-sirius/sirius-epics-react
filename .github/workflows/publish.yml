@@ -1,25 +1,30 @@
-name: Epics-React library CI
+name: Epics-React library CD
 
 on:
-  push:
-    branches: main
-
-  pull_request:
-    branches: main
+  release:
+    types: [published]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@master
-
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
       - name: Install 🔧
         run: yarn install
-
-      - name: Test 🚨
-        run: yarn test
-
       - name: Build 🏗️
         run: yarn run build
+      - name: Login 🔓
+        run: |
+          echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
+          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+      - name: Publish NPM 🪖
+        run: npm publish
+        env:
+          NPM_TOKEN: ${{ secrets.EPICS_REACT }}

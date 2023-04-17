@@ -1,0 +1,25 @@
+name: Epics-React library CI
+
+on:
+  push:
+    branches: main
+
+  pull_request:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@master
+
+      - name: Install 🔧
+        run: yarn install
+
+      - name: Test 🚨
+        run: yarn test
+
+      - name: Build 🏗️
+        run: yarn run build
