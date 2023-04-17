@@ -36,11 +36,15 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn install
-      - run: yarn run build
-      - run: |
-          echo lnls-sirius:https://npm.pkg.github.com/lnls-sirius/ > ./.npmrc
-          echo '//npm.pkg.github.com/lnls-sirius/:_authToken=${NPM_TOKEN}' >> ./.npmrc
-      - run: npm publish
+      - name: Install 🔧
+        run: yarn install
+      - name: Build 🏗️
+        run: yarn run build
+      - name: Login 🔓
+        run: |
+          echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
+          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+      - name: Publish NPM 🪖
+        run: npm publish
         env:
           NPM_TOKEN: ${{ secrets.EPICS_REACT }}
