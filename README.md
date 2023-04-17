@@ -1,5 +1,7 @@
 # Sirius Epics React
 
+[![Epics-React library CI](https://github.com/lnls-sirius/epics-react/actions/workflows/main.yml/badge.svg)](https://github.com/lnls-sirius/epics-react/actions/workflows/main.yml)
+
 >This project contains some default components for interacting with the EPICS control system using React.
 
 # Installation
