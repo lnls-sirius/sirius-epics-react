@@ -39,9 +39,8 @@ jobs:
       - run: yarn install
       - run: yarn run build
       - run: |
-          echo lnls-sirius:https://npm.pkg.github.com/ > build/.npmrc
-          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> build/.npmrc
+          echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
+          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
       - run: npm publish
-        working-directory: ./build
         env:
           NPM_TOKEN: ${{ secrets.EPICS_REACT }}
