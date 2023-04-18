@@ -1,8 +1,8 @@
 name: Epics-React library CD
 
 on:
-  release:
-    types: [published]
+  push:
+    branches: main
 
 jobs:
   deploy:
