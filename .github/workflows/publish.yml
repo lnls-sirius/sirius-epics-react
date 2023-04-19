@@ -44,13 +44,11 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          registry-url: https://registry.npmjs.org/
-          node-version: '14'
-
+      - name: Login npmjs 🔓
+        run: |
+          echo https://registry.npmjs.org/> ./.npmrc
+          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ./.npmrc
       - name: Publish
         run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.EPICS_REACT_NPMJS }}
+          NPM_TOKEN: ${{ secrets.EPICS_REACT_NPMJS }}
