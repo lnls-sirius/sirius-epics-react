@@ -1,5 +1,5 @@
 {
-  "name": "@lnls-sirius/sirius-epics-react",
+  "name": "sirius-epics-react",
   "version": "1.1.7",
   "description": "",
   "main": "./dist/cjs/index.js",
