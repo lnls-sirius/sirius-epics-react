@@ -2,32 +2,32 @@ name: Epics-React library CD
 
 on:
   push:
-    branches: dev
+    branches: main
 
 jobs:
-  github_npm:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '16.x'
-          registry-url: 'https://npm.pkg.github.com/'
-      - name: Install 🔧
-        run: yarn install
-      - name: Build 🏗️
-        run: yarn run build
-      - name: Login Github 🔓
-        run: |
-          echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
-          echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
-      - name: Publish NPM 🪖
-        run: npm publish
-        env:
-          NPM_TOKEN: ${{ secrets.EPICS_REACT }}
+  # github_npm:
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     contents: read
+  #     packages: write
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '16.x'
+  #         registry-url: 'https://npm.pkg.github.com/'
+  #     - name: Install 🔧
+  #       run: yarn install
+  #     - name: Build 🏗️
+  #       run: yarn run build
+  #     - name: Login Github 🔓
+  #       run: |
+  #         echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
+  #         echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+  #     - name: Publish NPM 🪖
+  #       run: npm publish
+  #       env:
+  #         NPM_TOKEN: ${{ secrets.EPICS_REACT }}
 
   npmjs_npm:
     runs-on: ubuntu-latest
