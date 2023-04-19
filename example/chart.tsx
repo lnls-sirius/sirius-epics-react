@@ -14,12 +14,12 @@ const ChartDoc: React.FC = () => {
     const [pvs, setPVs] = useState<string[]>(['4ewewe']);
 
     const threshold = {
-        'alert': 0.1,
-        'alarm': 0.14
+        'alert': 0.5,
+        'alarm': 0.6
     }
 
     function handleMod(value: any, pvname: string[] | undefined): any {
-        return value+10
+        return value+0.1
     }
 
     return (
