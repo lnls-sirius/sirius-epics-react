@@ -39,11 +39,13 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
       - name: Install 🔧
         run: yarn install
       - name: Build 🏗️
         run: yarn run build
+      - name: NPM registry
+        run: npm set registry https://registry.npmjs.org/
       - name: Login npmjs 🔓
         run: |
           echo https://registry.npmjs.org/> ./.npmrc
