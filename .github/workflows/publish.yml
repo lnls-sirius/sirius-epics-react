@@ -1,7 +1,7 @@
 name: Epics-React library CD
 
 on:
-  push:
+  pull_request:
     branches: main
 
 jobs:
@@ -51,6 +51,6 @@ jobs:
           echo https://registry.npmjs.org/> ./.npmrc
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ./.npmrc
       - name: Publish
-        run: npm publish
+        run: npm publish --verbose --access public
         env:
           NPM_TOKEN: ${{ secrets.EPICS_REACT_NPMJS }}
