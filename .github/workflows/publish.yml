@@ -7,7 +7,6 @@ on:
 jobs:
   github_npm:
     runs-on: ubuntu-latest
-    needs: deploy
     permissions:
       contents: read
       packages: write
@@ -32,7 +31,6 @@ jobs:
 
   npmjs_npm:
     runs-on: ubuntu-latest
-    needs: deploy
     permissions:
       contents: read
       packages: write
