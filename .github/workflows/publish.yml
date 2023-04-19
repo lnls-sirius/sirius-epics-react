@@ -2,7 +2,7 @@ name: Epics-React library CD
 
 on:
   pull_request:
-    branches: main
+    branches: dev
 
 jobs:
   github_npm:
