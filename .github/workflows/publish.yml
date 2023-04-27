@@ -1,8 +1,8 @@
 name: Epics-React library CD
 
 on:
-  push:
-    branches: main
+  release:
+    types: [created]
 
 jobs:
   # github_npm:
