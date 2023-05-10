@@ -13,7 +13,7 @@ class SiriusChart extends Component<ChartPv>{
   private chartRef: RefChart;
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;
-  private labelList: string[];
+  private labelList: (string|string[])[];
   private threshold_lines: any[];
   public chart: null|Chart;
 
@@ -79,11 +79,11 @@ class SiriusChart extends Component<ChartPv>{
     return default_colors.chart;
   }
 
-  initialize_label_list(labels: string[]|undefined): string[] {
+  initialize_label_list(labels: (string|string[])[]|undefined): (string|string[])[] {
     const { pv_name } = this.props;
-    let labelList: string[] = [];
+    let labelList: (string|string[])[] = [];
     pv_name.map((pv_name: string, idx_data: number)=>{
-      let label: string = pv_name;
+      let label: string|string[] = pv_name;
       if(labels!==undefined){
         if(labels[idx_data]!==undefined){
           label = labels[idx_data];
@@ -148,7 +148,7 @@ class SiriusChart extends Component<ChartPv>{
   /**
    * Set new datasets and labels to the EPICS Chart.=
    */
-  updateDataset(newData: any[], labels: string[]): void {
+  updateDataset(newData: any[], labels: (string|string[])[]): void {
     if(this.chart){
       this.chart.data.labels = labels;
       this.chart.data.datasets = newData;
@@ -220,6 +220,7 @@ class SiriusChart extends Component<ChartPv>{
         }
       }
     }
+
     let options:any = chartOptions;
     if(color_label){
       options.scales.x.ticks.padding = 25;
