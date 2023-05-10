@@ -197,11 +197,36 @@ class SiriusChart extends Component<ChartPv>{
    * Create a and configure the chart.
    */
   createChart(reference: HTMLCanvasElement): Chart {
-    const { pv_name, modifyOptions } = this.props;
+    const { pv_name, modifyOptions, color_label } = this.props;
+
+    const subLabel = {
+      id: "subLabels",
+      afterDatasetDraw(chart, args, pluginOptions){
+        const {ctx, canvas: {height}, chartArea: {left, width}} = chart;
+        if(color_label){
+          const size: number = color_label.length;
+          ctx.save();
+          ctx.font = 'bolder 12px sans-serif';
+          color_label.map((color: string, idx: number) =>{
+            const x: number = (width/(size*2))*(idx*2+1)+left-10;
+            ctx.fillStyle = color;
+            ctx.fillRect(x, height-25, 20, 20);
+          })
+        }
+      }
+    }
+
+    let options:any = chartOptions;
+    if(color_label){
+      options.layout = {};
+      options.layout.padding = {};
+      options.layout.padding.bottom = 25;
+    }
 
     const config: any = {
       type: "bar",
-      options: chartOptions
+      options: chartOptions,
+      plugins: [subLabel]
     }
 
     if(modifyOptions != undefined){
