@@ -13,7 +13,7 @@ class SiriusChart extends Component<ChartPv>{
   private chartRef: RefChart;
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;
-  private labelList: string[];
+  private labelList: (string|string[])[];
   private threshold_lines: any[];
   public chart: null|Chart;
 
@@ -148,7 +148,7 @@ class SiriusChart extends Component<ChartPv>{
   /**
    * Set new datasets and labels to the EPICS Chart.=
    */
-  updateDataset(newData: any[], labels: string[]): void {
+  updateDataset(newData: any[], labels: (string|string[])[]): void {
     if(this.chart){
       this.chart.data.labels = labels;
       this.chart.data.datasets = newData;
