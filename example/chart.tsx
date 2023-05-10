@@ -26,12 +26,14 @@ const ChartDoc: React.FC = () => {
         <Wrapper>
             <button onClick={()=> setPVs(
                 ["RAD:Berthold:TotalDoseRate:Dose",
+                "RAD:ELSE:TotalDoseRate:Dose", "RAD:Berthold:TotalDoseRate:Dose",
                 "RAD:ELSE:TotalDoseRate:Dose"])}>
                     ADD PVs
             </button>
             <SiriusChart
                 pv_name={[...pvs]}
                 label={['Thermo1', 'Thermo2', 'Thermo3', 'Thermo4']}
+                color_label={['#ff0109', '#ff01ff', '#55dd01', '#b3a912']}
                 threshold={threshold}
                 modifyValue={handleMod}/>
         </Wrapper>
