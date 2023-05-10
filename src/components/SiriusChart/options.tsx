@@ -5,11 +5,11 @@ const scalesOpt: Dict<any> = {
         display: true,
         type: 'category',
         ticks: {
-        maxRotation: 45,
-        minRotation: 45,
-        font: {
-            size: 15
-        }
+            maxRotation: 45,
+            minRotation: 45,
+            font: {
+                size: 15
+            }
         }
     },
     y: {

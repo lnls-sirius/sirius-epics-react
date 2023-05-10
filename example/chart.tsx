@@ -11,7 +11,7 @@ const Wrapper = styled.div`
 
 
 const ChartDoc: React.FC = () => {
-    const [pvs, setPVs] = useState<string[]>(['4ewewe']);
+    const [pvs, setPVs] = useState<string[]>([]);
 
     const threshold = {
         'alert': 0.5,
@@ -22,19 +22,23 @@ const ChartDoc: React.FC = () => {
         return value+0.1
     }
 
+    function handleOptions(options: any, pv_name: string[]|undefined): any {
+        return options;
+      }
+
     return (
         <Wrapper>
-            <button onClick={()=> setPVs(
-                ["RAD:Berthold:TotalDoseRate:Dose",
-                "RAD:ELSE:TotalDoseRate:Dose", "RAD:Berthold:TotalDoseRate:Dose",
-                "RAD:ELSE:TotalDoseRate:Dose"])}>
+            <button onClick={()=> setPVs([
+                '#ff0109', '#ff01ff', '#55dd01', '#b3a912'])}>
                     ADD PVs
             </button>
             <SiriusChart
-                pv_name={[...pvs]}
-                label={['Thermo1', 'Thermo2', 'Thermo3', 'Thermo4']}
-                color_label={['#ff0109', '#ff01ff', '#55dd01', '#b3a912']}
+                pv_name={["RAD:Berthold:TotalDoseRate:Dose",
+                    "RAD:ELSE:TotalDoseRate:Dose", "RAD:Berthold:TotalDoseRate:Dose",
+                    "RAD:ELSE:TotalDoseRate:Dose"]}
+                color_label={pvs}
                 threshold={threshold}
+                modifyOptions={handleOptions}
                 modifyValue={handleMod}/>
         </Wrapper>
     )
