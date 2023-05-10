@@ -33,7 +33,6 @@ describe('Epics Base Class', () => {
       }});
   });
 
-
   it("Set pv name function is working", () => {
     const pv1_2 = "NEW:FAKE:PV";
     epics_base.set_pvname(pv1_2);
