@@ -49,6 +49,12 @@ class SiriusChart extends Component<ChartPv>{
     const { pv_name, label } = this.props;
     this.epics.set_pvname(pv_name);
     this.labelList = this.initialize_label_list(label);
+    if(this.chartRef.current != null){
+      this.chart?.destroy();
+      this.chart = this.createChart(
+        this.chartRef.current);
+      this.updateChart();
+    }
   }
 
   componentWillUnmount(): void {
@@ -202,25 +208,21 @@ class SiriusChart extends Component<ChartPv>{
     const subLabel = {
       id: "subLabels",
       afterDatasetDraw(chart){
-        const {ctx, canvas: {height}, chartArea: {left, width}} = chart;
+        const {ctx, chartArea: {left, bottom, width}} = chart;
         if(color_label){
           const size: number = color_label.length;
           ctx.save();
-          ctx.font = 'bolder 12px sans-serif';
           color_label.map((color: string, idx: number) =>{
             const x: number = (width/(size*2))*(idx*2+1)+left-10;
             ctx.fillStyle = color;
-            ctx.fillRect(x, height-25, 20, 20);
+            ctx.fillRect(x, bottom+10, 20, 20);
           })
         }
       }
     }
-
     let options:any = chartOptions;
     if(color_label){
-      options.layout = {};
-      options.layout.padding = {};
-      options.layout.padding.bottom = 25;
+      options.scales.x.ticks.padding = 25;
     }
 
     const config: any = {

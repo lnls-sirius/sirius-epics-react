@@ -122,6 +122,8 @@ Example:
       'alarm': '#ff1b1b'
     }
   ```
+- color_label (Optional): List of colors in order to add colors to the X axis labels.
+
 - modifyOptions (Optional): Function that will be called on the chart creation and allow the complete customization of the chart options.
   ```
     T: any
