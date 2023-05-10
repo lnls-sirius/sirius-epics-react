@@ -201,7 +201,7 @@ class SiriusChart extends Component<ChartPv>{
 
     const subLabel = {
       id: "subLabels",
-      afterDatasetDraw(chart, args, pluginOptions){
+      afterDatasetDraw(chart){
         const {ctx, canvas: {height}, chartArea: {left, width}} = chart;
         if(color_label){
           const size: number = color_label.length;
