@@ -213,9 +213,9 @@ class SiriusChart extends Component<ChartPv>{
           const size: number = color_label.length;
           ctx.save();
           color_label.map((color: string, idx: number) =>{
-            const x: number = (width/(size*2))*(idx*2+1)+left-10;
+            const x: number = (width/(size*2))*(idx*2)+left;
             ctx.fillStyle = color;
-            ctx.fillRect(x, bottom+10, 20, 20);
+            ctx.fillRect(x, bottom+3, width/size, 27);
           })
         }
       }

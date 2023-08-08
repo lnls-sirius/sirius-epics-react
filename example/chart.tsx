@@ -36,7 +36,7 @@ const ChartDoc: React.FC = () => {
                 pv_name={["RAD:Berthold:TotalDoseRate:Dose",
                     "RAD:ELSE:TotalDoseRate:Dose", "RAD:Berthold:TotalDoseRate:Dose",
                     "RAD:ELSE:TotalDoseRate:Dose"]}
-                label={[['SI','MI'], 'SO']}
+                label={[['SI','MI'], 'SO', 'RAD', 'SWC']}
                 color_label={pvs}
                 threshold={threshold}
                 modifyOptions={handleOptions}
