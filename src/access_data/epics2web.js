@@ -271,7 +271,6 @@ class Jlab {
         if (!Jlab.instance) {
             Jlab.instance = this;
             this.epics2web = {};
-            // this.contextPrefix = '';
         }
     }
 
