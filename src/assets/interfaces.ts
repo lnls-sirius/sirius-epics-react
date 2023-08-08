@@ -54,6 +54,7 @@ interface LedStatus<T> {
 interface LedPv
     extends PvInterface<string>,
     LedStatus<Dict<string>>{
+        disc_time?: number
 }
 
 export type {

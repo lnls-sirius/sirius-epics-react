@@ -4,7 +4,7 @@ import SiriusLed from '../src/components/SiriusLed';
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 10% 10% 10% 10% 10% 10%;
+  grid-template-columns: repeat(8, 10%);
   text-align: center;
   align-items: center;
   justify-content: space-between;/
@@ -37,6 +37,7 @@ const LedDoc: React.FC = () => {
                     'alarm': 'radial-gradient(#ff1b1b, #a20000)'
                 }}/>
                 Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'} threshold={threshold3}/>
+                Led with disconnection handler: <SiriusLed pv_name="RAD:Thermo7:TotalDoseRate:Dose" shape={'circle'} disc_time={1500}/>
             </Wrapper>
         </div>
     )
