@@ -12,7 +12,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
   private epics: EpicsBase<string>;
   private color_list: Dict<string>;
   private hasMounted: boolean;
-  private last_update: Date | null;
+  private fist_update: Date;
 
   constructor(props: LedPv) {
     super(props);
@@ -21,7 +21,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     this.state = {
       value: 'nc'
     };
-    this.last_update = new Date();
+    this.fist_update = new Date();
     this.hasMounted = false;
     this.color_list = this.initialize_led_style(props.color);
     this.epics = this.initialize_epics_base(props);
@@ -87,17 +87,24 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
       const validValue: boolean = this.state!=null && pvInfo.value != null;
       if(validValue){
         led_value = this.epics.get_threshold(Number(pvInfo.value));
-        this.last_update = pvInfo.date;
         if(modifyValue!=undefined){
           led_value = modifyValue<string>(
             led_value, pv_name);
         }
         if(disc_time){
-          if(pvInfo.date != null && this.last_update != null){
-            let time_since_update: number = this.last_update.getTime() - pvInfo.date.getTime();
+          if(pvInfo.date != null){
+            const update_time: number = pvInfo.date.getTime();
+            const start_date: number = update_time - this.fist_update.getTime();
+            let time_since_update: number = (new Date()).getTime() - update_time;
+            if(start_date < 500){
+              time_since_update += disc_time;
+            }
+
             if(time_since_update >= disc_time){
               led_value = "nc";
             }
+          }else{
+            led_value = "nc";
           }
         }
       };

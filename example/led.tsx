@@ -30,14 +30,14 @@ const LedDoc: React.FC = () => {
     return (
         <div>
             <Wrapper>
-                Square led (square): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'square'} threshold={threshold1}/>
+                Square led (square): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'square'} threshold={threshold1} disc_time={60000}/>
                 Square with round borders(squ_circ): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'squ_circ'} threshold={threshold2} color={{
                     'alert': 'radial-gradient(#f8ff1b, #a29800)',
                     'som': '#000000',
                     'alarm': 'radial-gradient(#ff1b1b, #a20000)'
                 }}/>
-                Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'} threshold={threshold3}/>
-                Led with disconnection handler: <SiriusLed pv_name="RAD:Thermo7:TotalDoseRate:Dose" shape={'circle'} disc_time={1500}/>
+                Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'} threshold={threshold3} disc_time={60000}/>
+                Led with disconnection handler: <SiriusLed pv_name="RAD:Berthold:TotalDoseRate:Dose" shape={'circle'} disc_time={1500}/>
             </Wrapper>
         </div>
     )
