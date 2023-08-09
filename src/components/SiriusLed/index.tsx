@@ -76,6 +76,28 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
   }
 
   /**
+   * Check if the time since the last PV update is greater than
+   * the disconnect time parameter value.
+   */
+  check_disconnected(disc_time: number, pvInfo: EpicsData<number>, led_value: string){
+    if(pvInfo.date != null){
+      const update_time: number = pvInfo.date.getTime();
+      const start_date: number = update_time - this.fist_update.getTime();
+      let time_since_update: number = (new Date()).getTime() - update_time;
+      if(start_date < 500){
+        time_since_update += disc_time;
+      }
+
+      if(time_since_update >= disc_time){
+        led_value = "nc";
+      }
+    }else{
+      led_value = "nc";
+    }
+    return led_value
+  }
+
+  /**
    * Update led color with measured EPICS value
    */
   updateLed(): void {
@@ -92,20 +114,8 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
             led_value, pv_name);
         }
         if(disc_time){
-          if(pvInfo.date != null){
-            const update_time: number = pvInfo.date.getTime();
-            const start_date: number = update_time - this.fist_update.getTime();
-            let time_since_update: number = (new Date()).getTime() - update_time;
-            if(start_date < 500){
-              time_since_update += disc_time;
-            }
-
-            if(time_since_update >= disc_time){
-              led_value = "nc";
-            }
-          }else{
-            led_value = "nc";
-          }
+          led_value = this.check_disconnected(
+            disc_time, pvInfo, led_value)
         }
       };
     }
