@@ -65,6 +65,8 @@ Example:
   * 'square': Square Led
   * 'squ_circ': Square Led with round corners
 
+- disc_time (Optional): Set a maximum threshold time to indicate if a PV is frozen.
+
 - color (Optional): Customize the color for each threshold value.
 
   * The colors of each threshold can be determined by using the color parameter, for it to work the key of the color has to be the same as the key of the desired threshold it represents.
