@@ -24,9 +24,7 @@ const scalesOpt: Dict<any> = {
 }
 
 const chartOptions: any = {
-    animation: {
-        duration: 0
-    },
+    animation: false,
     spanGaps: true,
     responsive: true,
     maintainAspectRatio: false,
