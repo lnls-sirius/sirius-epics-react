@@ -74,24 +74,24 @@ const SiriusLed: React.FC<LedPv> = (props) => {
   const updateLed = (): void => {
     const { disc_time, pv_name, modifyValue } = props;
     let led_value: string = "nc";
+    if(!epics)
+      return;
 
-    if(epics){
-      let pvData: Dict<EpicsData<number>> = epics.get_pv_data<number>();
-      const pvInfo: EpicsData<number> = pvData[pv_name];
+    let pvData: Dict<EpicsData<number>> = epics.get_pv_data<number>();
+    const pvInfo: EpicsData<number> = pvData[pv_name];
+    if(!pvInfo)
+      return;
 
-      if(pvInfo != undefined){
-        const validValue: boolean = state!=null && pvInfo.value != null;
-        if(validValue){
-          console.info("OK"+pvInfo.value)
-          led_value = epics.get_threshold(Number(pvInfo.value));
-          if(modifyValue!=undefined)
-            led_value = modifyValue<string>(led_value, pv_name);
-          if(disc_time)
-            led_value = check_disconnected(disc_time, pvInfo, led_value);
-          setState(led_value);
-        }
-      }
-    }
+    const invalidValue: boolean = (state==null) || (pvInfo.value == null);
+    if(invalidValue)
+      return;
+
+    led_value = epics.get_threshold(Number(pvInfo.value));
+    if(modifyValue!=undefined)
+      led_value = modifyValue<string>(led_value, pv_name);
+    if(disc_time)
+      led_value = check_disconnected(disc_time, pvInfo, led_value);
+    setState(led_value);
   }
 
 
