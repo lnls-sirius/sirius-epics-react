@@ -16,7 +16,7 @@ const SiriusLed: React.FC<LedPv> = (props) => {
   useEffect(() => {
     initialize_epics_base();
     setColorList(initialize_led_style());
-  }, [props.pv_name]);
+  }, [props]);
 
   useEffect(() => () => {
     epics.destroy();
@@ -82,8 +82,8 @@ const SiriusLed: React.FC<LedPv> = (props) => {
     if(!pvInfo)
       return;
 
-    const invalidValue: boolean = ((state==null) || (pvInfo.value == null));
-    if(invalidValue)
+    const validValue: boolean = ((state==null) || (pvInfo.value == null));
+    if(!validValue)
       return;
 
     led_value = epics.get_threshold(Number(pvInfo.value));

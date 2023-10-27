@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import EpicsBase from "../../controllers/epics_base";
 import SiriusTooltip from "../SiriusTooltip";
-import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
+import { Dict, EpicsData, LabelPv } from "../../assets/interfaces";
 
 /**
  * Default Label component for monitoring a PV from the EPICS control system.
@@ -13,7 +13,7 @@ const SiriusLabel: React.FC<LabelPv> = (props) => {
 
   useEffect(() => {
     initialize_epics_base();
-  }, []);
+  }, [props]);
 
   useEffect(() => () => {
     epics.destroy();
@@ -36,12 +36,11 @@ const SiriusLabel: React.FC<LabelPv> = (props) => {
     let label_value: string = 'NC';
     if(!pvInfo)
       return;
-    if(!pvInfo.value)
+    if(pvInfo.value==null)
       return;
 
     const pvInfoVal: string|number = pvInfo.value;
-    const invalidValue:boolean = ((value==null) || (pvInfoVal == null));
-    if(invalidValue)
+    if(value==null)
       return;
 
     const isNumber = pvInfo.datatype == "DBR_DOUBLE" &&
