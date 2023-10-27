@@ -1,5 +1,5 @@
 import React from "react";
-import EpicsBase from "../epics";
+import EpicsBase from "../../controllers/epics_base";
 import SiriusTooltip from "../SiriusTooltip";
 import { Dict, EpicsData, LabelPv, State } from "../../assets/interfaces";
 

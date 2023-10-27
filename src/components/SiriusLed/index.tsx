@@ -1,5 +1,5 @@
 import React from "react";
-import EpicsBase from "../epics";
+import EpicsBase from "../../controllers/epics_base";
 import SiriusTooltip from "../SiriusTooltip";
 import { State, LedPv, EpicsData, Dict } from "../../assets/interfaces";
 import { default_colors, led_shape } from "../../assets/themes";
