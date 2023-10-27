@@ -16,13 +16,17 @@ const SiriusLed: React.FC<LedPv> = (props) => {
   useEffect(() => {
     initialize_epics_base();
     setColorList(initialize_led_style());
-    epics?.set_pvname(props.pv_name);
   }, [props.pv_name]);
+
+  useEffect(() => () => {
+    epics.destroy();
+  }, []);
 
   const initialize_epics_base = (): void => {
     const { pv_name, threshold, update_interval } = props;
     epics.initialize(pv_name, threshold, update_interval);
     epics.start_timer(updateLed);
+    epics.set_pvname(props.pv_name);
   }
 
   /**
