@@ -82,7 +82,7 @@ const SiriusLed: React.FC<LedPv> = (props) => {
     if(!pvInfo)
       return;
 
-    const invalidValue: boolean = (state==null) || (pvInfo.value == null);
+    const invalidValue: boolean = ((state==null) || (pvInfo.value == null));
     if(invalidValue)
       return;
 
