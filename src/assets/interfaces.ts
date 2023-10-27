@@ -1,9 +1,5 @@
 type RefChart = React.RefObject<HTMLCanvasElement>
 
-interface State<T> {
-    value: T
-}
-
 interface Dict<T> {
     [key: string]: T
 }

@@ -13,7 +13,7 @@ class EpicsBase<T extends string|string[]> {
     private timer: any;
 
     constructor(pvname: T){
-        this.update_interval = 100;
+        this.update_interval = 300;
         this.pv_name = pvname;
         this._subscribe2epics_con();
         this.timer = null;
