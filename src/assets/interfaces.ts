@@ -62,7 +62,6 @@ export type {
     LabelPv,
     LedStatus,
     LedPv,
-    State,
     Dict,
     RefChart
 }
