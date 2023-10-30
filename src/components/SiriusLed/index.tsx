@@ -26,6 +26,7 @@ const SiriusLed: React.FC<LedPv> = (props) => {
     const { pv_name, threshold, update_interval } = props;
     epics.initialize(pv_name, threshold, update_interval);
     epics.start_timer(updateLed);
+    epics.set_pvname(pv_name);
   }
 
   /**
@@ -53,11 +54,10 @@ const SiriusLed: React.FC<LedPv> = (props) => {
    * Check if the time since the last PV update is greater than
    * the disconnect time parameter value.
    */
-  const check_disconnected = (disc_time: number, pvInfo: EpicsData<number>, led_value: string): string => {
-    if(pvInfo.date === null)
+  const check_disconnected = (disc_time: number, update_date: Date|null, led_value: string): string => {
+    if(update_date === null)
       return "nc";
-
-    const update_time: number = pvInfo.date.getTime();
+    const update_time: number = update_date.getTime();
     const now_ms: number = (new Date()).getTime();
     let time_since_update: number = now_ms - update_time;
 
@@ -81,15 +81,15 @@ const SiriusLed: React.FC<LedPv> = (props) => {
     if(!pvInfo)
       return;
 
-    const validValue: boolean = ((state==null) || (pvInfo.value == null));
-    if(!validValue)
+    const invalidValue: boolean = ((!state) || (pvInfo.value === null));
+    if(invalidValue)
       return;
 
     led_value = epics.get_threshold(Number(pvInfo.value));
     if(modifyValue!=undefined)
       led_value = modifyValue<string>(led_value, pv_name);
     if(disc_time)
-      led_value = check_disconnected(disc_time, pvInfo, led_value);
+      led_value = check_disconnected(disc_time, pvInfo.date, led_value);
     setState(led_value);
   }
 
