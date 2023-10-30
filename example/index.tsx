@@ -33,7 +33,7 @@ root.render(
     <Wrapper>
       <LedDoc/>
     </Wrapper>
-    <Wrapper>
+    {/* <Wrapper>
       <LabelDoc/>
     </Wrapper>
     <Wrapper>
@@ -41,6 +41,6 @@ root.render(
     </Wrapper>
     <Wrapper>
       <ChartDoc/>
-    </Wrapper>
+    </Wrapper> */}
   </div>
 )

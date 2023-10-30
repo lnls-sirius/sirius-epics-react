@@ -22,7 +22,7 @@ class EpicsCon {
     static new_pvs_list(pv_list: string[]): string[]{
         let pvs2add: string[] = [];
         pv_list.map((pvname: string) => {
-            if(!(pvname in this.pv_name)){
+            if(!(this.pv_name.includes(pvname))){
                 pvs2add.push(pvname);
             }
         })
