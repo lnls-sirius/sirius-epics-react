@@ -26,7 +26,6 @@ const SiriusLed: React.FC<LedPv> = (props) => {
     const { pv_name, threshold, update_interval } = props;
     epics.initialize(pv_name, threshold, update_interval);
     epics.start_timer(updateLed);
-    epics.set_pvname(props.pv_name);
   }
 
   /**

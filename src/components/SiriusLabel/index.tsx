@@ -23,7 +23,6 @@ const SiriusLabel: React.FC<LabelPv> = (props) => {
     const { pv_name, threshold, update_interval } = props;
     epics.initialize(pv_name, threshold, update_interval);
     epics.start_timer(updateLabel);
-    epics.set_pvname(props.pv_name);
   }
 
   /**
