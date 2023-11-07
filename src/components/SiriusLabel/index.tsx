@@ -13,6 +13,7 @@ const SiriusLabel: React.FC<LabelPv> = (props) => {
 
   useEffect(() => {
     const timerId = initialize_epics_base();
+    setValue('NC')
     return () => {
       epics.stop_timer(timerId);
     };
