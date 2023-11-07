@@ -12,17 +12,21 @@ const SiriusLabel: React.FC<LabelPv> = (props) => {
   const precision: number|undefined = props.precision;
 
   useEffect(() => {
-    initialize_epics_base();
+    const timerId = initialize_epics_base();
+    return () => {
+      epics.stop_timer(timerId);
+    };
   }, [props]);
 
   useEffect(() => () => {
     epics.destroy();
   }, []);
 
-  const initialize_epics_base = (): void => {
+  const initialize_epics_base = (): NodeJS.Timer => {
     const { pv_name, threshold, update_interval } = props;
     epics.initialize(pv_name, threshold, update_interval);
-    epics.start_timer(updateLabel);
+    const timerId = epics.start_timer(updateLabel);
+    return timerId;
   }
 
   /**

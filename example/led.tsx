@@ -13,8 +13,8 @@ const Wrapper = styled.div`
 const LedDoc: React.FC = () => {
     const [state, setState] = useState<boolean>(false);
     const threshold1 = {
-        'alert': 0.9,
-        'alarm': 0.3
+        'alert': 0.4,
+        'alarm': 0.06
     }
 
     const threshold2 = {
@@ -44,11 +44,11 @@ const LedDoc: React.FC = () => {
         <div>
             <button onClick={()=>{setState(!state)}}>Change Led Colors</button>
             <Wrapper>
-                Square led (square): <SiriusLed pv_name={state?"RAD:ELSE:Gamma":"RAD:Berthold:TotalDoseRate:Dose"} shape={'square'} threshold={threshold1} disc_time={60000}/>
-                {/* Square with round borders(squ_circ): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'squ_circ'}
+                Square led (square): <SiriusLed pv_name={state?"SI-01BCFE:VA-CCG-MD:Pressure-Mon":"SI-01SA:VA-CCG-BG:Pressure-Mon"} shape={'square'} threshold={threshold1} disc_time={60000}/>
+                Square with round borders(squ_circ): <SiriusLed pv_name="SI-02C3:VA-CCG-BG:Pressure-Mon" shape={'squ_circ'}
                     threshold={state?threshold1:threshold2} color={state?color1:color2}/>
-                Circle led (circle): <SiriusLed pv_name="RAD:ELSE:Gamma" shape={'circle'} threshold={threshold3} disc_time={60000}/>
-                Led with disconnection handler: <SiriusLed pv_name={state?"RAD:ELSE:Gamma":"RAD:Berthold:TotalDoseRate:Dose"} shape={'circle'} disc_time={1500}/> */}
+                Circle led (circle): <SiriusLed pv_name="SI-02C3:VA-CCG-BG:Pressure-Mon" shape={'circle'} threshold={threshold3} disc_time={60000}/>
+                Led with disconnection handler: <SiriusLed pv_name={state?"SI-02C3:VA-CCG-BG:Pressure-Mon":"SI-01SA:VA-CCG-BG:Pressure-Mon"} shape={'circle'} disc_time={1500}/>
             </Wrapper>
         </div>
     )

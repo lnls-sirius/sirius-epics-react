@@ -26,9 +26,9 @@ const SiriusLed: React.FC<LedPv> = (props) => {
   }, []);
 
   const initialize_epics_base = (): NodeJS.Timer => {
-    const { pv_name, threshold, update_interval, modifyValue } = props;
+    const { pv_name, threshold, update_interval } = props;
     epics.initialize(pv_name, threshold, update_interval);
-    const timerId = epics.start_timer(()=>updateLed(props.disc_time, pv_name, modifyValue));
+    const timerId = epics.start_timer(updateLed);
     return timerId
   }
 
@@ -73,7 +73,8 @@ const SiriusLed: React.FC<LedPv> = (props) => {
   /**
    * Update led color with measured EPICS value
    */
-  const updateLed = (disc_time: number|undefined, pv_name: string, modifyValue: ((value: string, pvname: string) => string) | undefined): void => {
+  const updateLed = (): void => {
+    const { disc_time, pv_name, modifyValue } = props;
     let led_value: string = "nc";
     if(!epics)
       return;
