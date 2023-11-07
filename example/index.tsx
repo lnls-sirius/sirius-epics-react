@@ -33,13 +33,13 @@ root.render(
     <Wrapper>
       <LedDoc/>
     </Wrapper>
-    {/* <Wrapper>
+    <Wrapper>
       <LabelDoc/>
     </Wrapper>
     <Wrapper>
       <InvisibleDoc/>
     </Wrapper>
-    <Wrapper>
+    {/* <Wrapper>
       <ChartDoc/>
     </Wrapper> */}
   </div>
