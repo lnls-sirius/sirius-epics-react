@@ -10,11 +10,13 @@ class EpicsBase<T extends string|string[]> {
     public update_interval: number;
     public thresholds: Thresholds;
     public pv_name: T;
+    public last_update: Date;
 
     constructor(pvname: T){
         this.update_interval = 300;
         this.set_pvname(pvname);
         this.thresholds = new Thresholds();
+        this.last_update = new Date(0);
     }
 
     initialize(pv_name: T, threshold: undefined|Dict<number>, update_interval: undefined|number): void {
@@ -35,6 +37,15 @@ class EpicsBase<T extends string|string[]> {
 
     stop_timer(timer: NodeJS.Timer): void {
         clearInterval(timer);
+    }
+
+    reset_last_update(): void {
+        this.last_update = new Date(0);
+    }
+
+    update_last_update(update_date: Date|null): void {
+        if(update_date)
+            this.last_update = update_date;
     }
 
     get_pv_data<M>(): Dict<EpicsData<M>> {

@@ -48,7 +48,7 @@ const LedDoc: React.FC = () => {
                 Square with round borders(squ_circ): <SiriusLed pv_name="SI-02C3:VA-CCG-BG:Pressure-Mon" shape={'squ_circ'}
                     threshold={state?threshold1:threshold2} color={state?color1:color2}/>
                 Circle led (circle): <SiriusLed pv_name="SI-02C3:VA-CCG-BG:Pressure-Mon" shape={'circle'} threshold={threshold3} disc_time={60000}/>
-                Led with disconnection handler: <SiriusLed pv_name={state?"SI-02C3:VA-CCG-BG:Pressure-Mon":"SI-01SA:VA-CCG-BG:Pressure-Mon"} shape={'circle'} disc_time={1500}/>
+                Led with disconnection handler: <SiriusLed pv_name={state?"SI-02C3:VA-CCG-BG:Pressure-Mon":"RAD:Thermo1:Gamma"} shape={'circle'} disc_time={2000}/>
             </Wrapper>
         </div>
     )
