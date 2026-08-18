@@ -98,16 +98,6 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
   }
 
   /**
-   * Register first update
-   */
-  register_first_update(): void {
-    const date_0: Date = new Date(0);
-    if(date_0.getTime() == this.first_update.getTime()){
-      this.first_update = new Date();
-    }
-  }
-
-  /**
    * Update led color with measured EPICS value
    */
   updateLed(): void {
@@ -115,7 +105,6 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     let led_value: string = "nc";
     let pvData: Dict<EpicsData<number>> = this.epics.get_pv_data<number>();
     const pvInfo: EpicsData<number> = pvData[pv_name];
-    this.register_first_update();
 
     if(pvInfo != undefined){
       const validValue: boolean = this.state!=null && pvInfo.value != null;
