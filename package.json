@@ -11,9 +11,9 @@
   "scripts": {
     "start": "parcel example/index.html --https",
     "test": "jest",
-    "build": "yarn build:esm && yarn build:cjs",
-    "build:esm": "tsc",
-    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
+    "build": "pnpm run build:esm && pnpm run build:cjs",
+    "build:esm": "pnpm exec tsc ",
+    "build:cjs": "pnpm exec tsc --module commonjs --outDir dist/cjs",
     "prepare": "npm run build"
   },
   "repository": {
@@ -61,7 +61,6 @@
     "jest-environment-jsdom": "^29.5.0",
     "react-popper": "^2.3.0",
     "styled-components": "^5.3.9",
-    "tsc": "^2.0.4",
     "tslib": "^2.5.0"
   }
 }

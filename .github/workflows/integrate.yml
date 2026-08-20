@@ -13,10 +13,10 @@ jobs:
         uses: actions/checkout@master
 
       - name: Install 🔧
-        run: yarn install
+        run: pnpm install
 
       - name: Test 🚨
-        run: yarn test
+        run: pnpm test
 
       - name: Build 🏗️
-        run: yarn run build
+        run: pnpm run build
