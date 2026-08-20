@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: pnpm/setup@v1
         with:
-          version: 11
           runtime: node@22
           cache: true
       - name: Install 🔧
