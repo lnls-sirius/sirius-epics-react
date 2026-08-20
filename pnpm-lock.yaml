@@ -4,9 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-overrides:
-  sirius-epics-react: 'link:'
-
 importers:
 
   .:
@@ -32,9 +29,6 @@ importers:
       react-popper:
         specifier: ^2.3.0
         version: 2.3.0(@popperjs/core@2.11.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      sirius-epics-react:
-        specifier: 'link:'
-        version: 'link:'
       styled-components:
         specifier: ^5.3.9
         version: 5.3.11(@babel/core@7.29.7)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
