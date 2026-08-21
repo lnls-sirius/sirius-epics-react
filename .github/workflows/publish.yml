@@ -22,12 +22,12 @@ jobs:
       - name: Build 🏗️
         run: pnpm run build
       - name: NPM registry
-        run: npm set registry https://registry.npmjs.org/
+        run: pnpm set registry https://registry.npmjs.org/
       - name: Login npmjs 🔓
         run: |
           echo https://registry.npmjs.org/> ./.npmrc
           echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ./.npmrc
       - name: Publish
-        run: npm publish --verbose --access public
+        run: pnpm publish --verbose --access public
         env:
           NPM_TOKEN: ${{ secrets.EPICS_REACT_NPMJS }}
