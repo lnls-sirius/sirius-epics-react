@@ -11,7 +11,9 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: pnpm/setup@v1
+      - uses: actions/checkout@v6
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2.0.0
         with:
           runtime: node@22
           cache: true
