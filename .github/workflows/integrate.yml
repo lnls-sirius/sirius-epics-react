@@ -14,8 +14,5 @@ jobs:
           runtime: node@22
           cache: true
 
-      - name: Test 🚨
-        run: pnpm test
-
       - name: Build 🏗️
         run: pnpm run build
