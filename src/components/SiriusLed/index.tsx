@@ -12,7 +12,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
   private epics: EpicsBase<string>;
   private color_list: Dict<string>;
   private hasMounted: boolean;
-  private fist_update: Date;
+  private first_update: Date;
 
   constructor(props: LedPv) {
     super(props);
@@ -21,7 +21,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     this.state = {
       value: 'nc'
     };
-    this.fist_update = new Date(0);
+    this.first_update = new Date(0);
     this.hasMounted = false;
     this.color_list = this.initialize_led_style(props.color);
     this.epics = this.initialize_epics_base(props);
@@ -82,7 +82,7 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
   check_disconnected(disc_time: number, pvInfo: EpicsData<number>, led_value: string): string {
     if(pvInfo.date != null){
       const update_time: number = pvInfo.date.getTime();
-      const start_date: number = update_time - this.fist_update.getTime();
+      const start_date: number = update_time - this.first_update.getTime();
       let time_since_update: number = (new Date()).getTime() - update_time;
       if(start_date < 1000){
         time_since_update += disc_time;
@@ -98,16 +98,6 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
   }
 
   /**
-   * Register first update
-   */
-  register_first_update(): void {
-    const date_0: Date = new Date(0);
-    if(date_0.getTime() == this.fist_update.getTime()){
-      this.fist_update = new Date();
-    }
-  }
-
-  /**
    * Update led color with measured EPICS value
    */
   updateLed(): void {
@@ -115,7 +105,6 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
     let led_value: string = "nc";
     let pvData: Dict<EpicsData<number>> = this.epics.get_pv_data<number>();
     const pvInfo: EpicsData<number> = pvData[pv_name];
-    this.register_first_update();
 
     if(pvInfo != undefined){
       const validValue: boolean = this.state!=null && pvInfo.value != null;
@@ -130,10 +119,10 @@ class SiriusLed extends React.Component<LedPv, State<string>>{
             disc_time, pvInfo, led_value)
         }
       }else{
-        this.fist_update = new Date(0);
+        this.first_update = new Date(0);
       }
     }else{
-      this.fist_update = new Date(0);
+      this.first_update = new Date(0);
     }
 
     if(this.hasMounted){
