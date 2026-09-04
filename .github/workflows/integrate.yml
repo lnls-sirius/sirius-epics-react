@@ -1,22 +1,18 @@
 name: Epics-React library CI
-
 on:
   pull_request:
     branches: main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-24.04
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@master
-
-      - name: Install 🔧
-        run: yarn install
-
-      - name: Test 🚨
-        run: yarn test
+      - uses: actions/checkout@v6
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2.0.0
+        with:
+          runtime: node@22
+          cache: true
 
       - name: Build 🏗️
-        run: yarn run build
+        run: pnpm run build

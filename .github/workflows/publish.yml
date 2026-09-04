@@ -1,56 +1,37 @@
 name: Epics-React library CD
-
 on:
   release:
     types: [created]
 
 jobs:
-  # github_npm:
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: '16.x'
-  #         registry-url: 'https://npm.pkg.github.com/'
-  #     - name: Install 🔧
-  #       run: yarn install
-  #     - name: Build 🏗️
-  #       run: yarn run build
-  #     - name: Login Github 🔓
-  #       run: |
-  #         echo lnls-sirius:https://npm.pkg.github.com/ > ./.npmrc
-  #         echo '//npm.pkg.github.com/:_authToken=${NPM_TOKEN}' >> ./.npmrc
-  #     - name: Publish NPM 🪖
-  #       run: npm publish
-  #       env:
-  #         NPM_TOKEN: ${{ secrets.EPICS_REACT }}
-
   npmjs_npm:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
+      id-token: write
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm and Node.js
+        uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2.0.0
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org/'
+          runtime: node@22
+          cache: true
+
       - name: Install 🔧
-        run: yarn install
+        run: pnpm install
+
       - name: Build 🏗️
-        run: yarn run build
+        run: pnpm run build
+
       - name: NPM registry
         run: npm set registry https://registry.npmjs.org/
       - name: Login npmjs 🔓
         run: |
           echo https://registry.npmjs.org/> ./.npmrc
-          echo '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' >> ./.npmrc
+          echo '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}' >> ~/.npmrc
       - name: Publish
-        run: npm publish --verbose --access public
+        run: npm publish --verbose --access public --no-git-checks
         env:
-          NPM_TOKEN: ${{ secrets.EPICS_REACT_NPMJS }}
+          NODE_AUTH_TOKEN: ${{ secrets.EPICS_REACT_NPMJS }}
