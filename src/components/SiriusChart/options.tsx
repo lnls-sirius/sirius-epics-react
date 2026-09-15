@@ -33,10 +33,7 @@ const chartOptions: any = {
            radius: 0
         }
     },
-    hover: {
-        mode: "nearest",
-        intersect: true
-    },
+    events: [],
     scales: scalesOpt,
     plugins:{
         datalabels: { 
@@ -44,7 +41,7 @@ const chartOptions: any = {
             color: 'black', 
             font: { weight: "bold"},
             formatter: function (value, context) {
-                return value.toExponential(1);
+                return value.toExponential(2);
             }},
         legend: {
             display: false
