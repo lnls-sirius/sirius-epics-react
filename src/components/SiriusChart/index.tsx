@@ -1,4 +1,5 @@
 import React, { Component, createRef } from "react";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Chart  from 'chart.js/auto';
 import EpicsBase from "../epics";
 import { default_colors } from "../../assets/themes";
@@ -126,7 +127,8 @@ class SiriusChart extends Component<ChartPv>{
             label: this.capitalize(label),
             borderColor: color,
             fillColor: color,
-            strokeColor: color
+            strokeColor: color,
+            datalabels: { display: false }
           }
           dataset_threshold.push(datasetTemp);
         }
@@ -229,7 +231,7 @@ class SiriusChart extends Component<ChartPv>{
     const config: any = {
       type: "bar",
       options: chartOptions,
-      plugins: [subLabel]
+      plugins: [subLabel, ChartDataLabels]
     }
 
     if(modifyOptions != undefined){

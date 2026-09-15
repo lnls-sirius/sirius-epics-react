@@ -39,6 +39,13 @@ const chartOptions: any = {
     },
     scales: scalesOpt,
     plugins:{
+        datalabels: { 
+            rotation: 270, 
+            color: 'black', 
+            font: { weight: "bold"},
+            formatter: function (value, context) {
+                return value.toExponential(1);
+            }},
         legend: {
             display: false
         }
