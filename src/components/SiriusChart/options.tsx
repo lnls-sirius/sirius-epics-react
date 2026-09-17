@@ -33,7 +33,6 @@ const chartOptions: any = {
            radius: 0
         }
     },
-    events: [],
     scales: scalesOpt,
     plugins:{
         datalabels: { 
@@ -45,6 +44,13 @@ const chartOptions: any = {
             }},
         legend: {
             display: false
+        },
+        title: {
+            display: true,
+            text: "Integrated Dose",
+            font: {
+            size: "12"
+            }
         }
     }
 }

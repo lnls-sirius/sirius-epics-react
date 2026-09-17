@@ -21,13 +21,15 @@ class SiriusChart extends Component<ChartPv>{
   constructor(props: ChartPv){
     super(props);
     this.updateChart = this.updateChart.bind(this);
-
     this.chartRef = createRef();
     this.color_list = this.initialize_bar_style(props.color);
     this.epics = this.initialize_epics_base(props);
     this.labelList = this.initialize_label_list(props.label);
     this.threshold_lines = [];
     this.chart = null;
+    this.state = {
+      tooltip: ""
+    };
   }
 
   /**
@@ -201,6 +203,16 @@ class SiriusChart extends Component<ChartPv>{
     return dataset;
   }
 
+  customTooltipCallback = (tooltipModel) => {
+    let tooltip: string = "";
+    if(tooltipModel.tooltip.title){
+      tooltip = tooltipModel.tooltip.title[0];
+      tooltip += " - ";
+      tooltip += tooltipModel.tooltip.dataPoints[0].raw.toExponential(2);
+      this.setState({tooltip: tooltip})
+    }
+  }
+
   /**
    * Create a and configure the chart.
    */
@@ -227,6 +239,11 @@ class SiriusChart extends Component<ChartPv>{
     if(color_label){
       options.scales.x.ticks.padding = 25;
     }
+    options.plugins.tooltip = { 
+      mode: 'index', 
+      enabled: false, 
+      external: this.customTooltipCallback
+    }
 
     const config: any = {
       type: "bar",
@@ -248,6 +265,9 @@ class SiriusChart extends Component<ChartPv>{
   render(): React.ReactNode {
     return (
       <S.ChartWrapper>
+        <S.Tooltip>
+          {this.state.tooltip}
+        </S.Tooltip>
         <S.Chart
           data-testid="sirius-chart"
           id="canva"
