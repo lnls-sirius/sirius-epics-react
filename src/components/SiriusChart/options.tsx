@@ -33,14 +33,24 @@ const chartOptions: any = {
            radius: 0
         }
     },
-    hover: {
-        mode: "nearest",
-        intersect: true
-    },
     scales: scalesOpt,
     plugins:{
+        datalabels: { 
+            rotation: 270, 
+            color: 'black', 
+            font: { weight: "bold"},
+            formatter: function (value, context) {
+                return value.toExponential(2);
+            }},
         legend: {
             display: false
+        },
+        title: {
+            display: true,
+            text: "Integrated Dose",
+            font: {
+            size: "12"
+            }
         }
     }
 }
