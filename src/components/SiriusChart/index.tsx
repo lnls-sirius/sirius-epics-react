@@ -10,7 +10,7 @@ import * as S from './styled';
 /**
  * Default Chart component for monitoring a list of PVs from the EPICS control system.
 */
-class SiriusChart extends Component<ChartPv>{
+class SiriusChart extends Component<ChartPv, {tooltip: string}>{
   private chartRef: RefChart;
   private color_list: Dict<string>;
   private epics: EpicsBase<string[]>;

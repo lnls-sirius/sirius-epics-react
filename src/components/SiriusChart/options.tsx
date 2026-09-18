@@ -39,7 +39,7 @@ const chartOptions: any = {
             rotation: 270, 
             color: 'black', 
             font: { weight: "bold"},
-            formatter: function (value, context) {
+            formatter: function (value) {
                 return value.toExponential(2);
             }},
         legend: {
